@@ -636,29 +636,39 @@ export const App: React.FC = () => {
               <div className="space-y-3">
                 {/* 1. Door & Entryway Configuration */}
                 <div className="p-3.5 rounded-2xl bg-white border border-stone-200 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs font-bold text-stone-800 flex items-center gap-1.5 uppercase tracking-wider">
-                      <Compass className="w-3.5 h-3.5 text-sunshine-600" />
-                      <span>Door & Entry Arc</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-xl bg-mint-50 text-mint-600 border border-mint-200/60 flex items-center justify-center shrink-0">
+                        <Compass className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-stone-800">Door & Entry Arc</div>
+                        <div className="text-[10px] text-stone-400">Clearance arc collision detection</div>
+                      </div>
                     </div>
 
-                    {/* Door Presence Toggle */}
+                    {/* Intuitive iOS-Style Toggle Switch */}
                     <button
                       type="button"
+                      role="switch"
+                      aria-checked={hasDoor}
                       onClick={() => setHasDoor(!hasDoor)}
-                      className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1 border ${
-                        hasDoor
-                          ? 'bg-mint-50 text-mint-700 border-mint-200 shadow-xs'
-                          : 'bg-stone-100 text-stone-500 border-stone-200 hover:text-stone-700'
+                      className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-mint-500/30 ${
+                        hasDoor ? 'bg-mint-500' : 'bg-stone-300'
                       }`}
                       title={hasDoor ? "Click to remove door" : "Click to add door"}
                     >
-                      <span>{hasDoor ? '✓ Door Included' : '✕ No Door (Removed)'}</span>
+                      <span className="sr-only">Toggle door</span>
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                          hasDoor ? 'translate-x-6' : 'translate-x-0'
+                        }`}
+                      />
                     </button>
                   </div>
 
                   {hasDoor ? (
-                    <div className="space-y-2.5 pt-1">
+                    <div className="space-y-2.5 pt-1 border-t border-stone-100">
                       {/* Door Type Selection */}
                       <div className="space-y-1">
                         <label className="text-[10px] text-stone-500 block font-semibold uppercase">Door Swing / Entryway Type</label>
@@ -739,37 +749,51 @@ export const App: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-[11px] text-stone-500 flex items-center gap-2">
-                      <span className="text-stone-400">🚪</span>
-                      <span>No door obstacle in this room. Door swept area collisions are disabled.</span>
+                    <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-[11px] text-stone-500 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-stone-400">🚪</span>
+                        <span>No door in this room (door arc collisions disabled)</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-stone-400 font-mono uppercase">Disabled</span>
                     </div>
                   )}
                 </div>
 
                 {/* 2. Window & Natural Light Configuration */}
                 <div className="p-3.5 rounded-2xl bg-white border border-stone-200 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs font-bold text-stone-800 flex items-center gap-1.5 uppercase tracking-wider">
-                      <Sun className="w-3.5 h-3.5 text-sunshine-500" />
-                      <span>Window & Daylight</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-xl bg-sunshine-50 text-sunshine-600 border border-sunshine-200/60 flex items-center justify-center shrink-0">
+                        <Sun className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-stone-800">Window & Daylight</div>
+                        <div className="text-[10px] text-stone-400">Natural light & sill clearance</div>
+                      </div>
                     </div>
 
+                    {/* Intuitive iOS-Style Toggle Switch */}
                     <button
                       type="button"
+                      role="switch"
+                      aria-checked={hasWindow}
                       onClick={() => setHasWindow(!hasWindow)}
-                      className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1 border ${
-                        hasWindow
-                          ? 'bg-azure-50 text-azure-700 border-azure-200 shadow-xs'
-                          : 'bg-stone-100 text-stone-500 border-stone-200 hover:text-stone-700'
+                      className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-azure-500/30 ${
+                        hasWindow ? 'bg-azure-500' : 'bg-stone-300'
                       }`}
                       title={hasWindow ? "Click to remove window" : "Click to add window"}
                     >
-                      <span>{hasWindow ? '✓ Window Included' : '✕ No Window'}</span>
+                      <span className="sr-only">Toggle window</span>
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                          hasWindow ? 'translate-x-6' : 'translate-x-0'
+                        }`}
+                      />
                     </button>
                   </div>
 
-                  {hasWindow && (
-                    <div className="space-y-2.5 pt-1">
+                  {hasWindow ? (
+                    <div className="space-y-2.5 pt-1 border-t border-stone-100">
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
                           <label className="text-[10px] text-stone-500 block mb-1 font-semibold uppercase">Window Wall</label>
@@ -815,6 +839,14 @@ export const App: React.FC = () => {
                           className="w-full accent-azure-500 h-1.5 bg-stone-100 rounded-lg cursor-pointer"
                         />
                       </div>
+                    </div>
+                  ) : (
+                    <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-[11px] text-stone-500 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-stone-400">🪟</span>
+                        <span>No window in this room</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-stone-400 font-mono uppercase">Disabled</span>
                     </div>
                   )}
                 </div>

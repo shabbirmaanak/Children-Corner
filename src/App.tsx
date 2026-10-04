@@ -298,8 +298,10 @@ export const App: React.FC = () => {
 
   return (
     <div className="h-screen w-screen bg-[#FAF7F2] text-stone-800 flex flex-col font-sans overflow-hidden select-none">
-      {/* 1. Sleek Luminous AI Studio Header Bar */}
-      <header className="h-14 bg-white/90 border-b border-stone-200/80 px-4 flex items-center justify-between shrink-0 z-30 backdrop-blur-xl shadow-xs">
+      {/* Studio Screen Container (Hidden on Print) */}
+      <div id="studio-main-screen" className="flex-1 flex flex-col overflow-hidden print:hidden">
+        {/* 1. Sleek Luminous AI Studio Header Bar */}
+        <header className="h-14 bg-white/90 border-b border-stone-200/80 px-4 flex items-center justify-between shrink-0 z-30 backdrop-blur-xl shadow-xs">
         {/* Brand & Child's Name Inline Editor */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-mint-500 via-azure-500 to-coral-500 flex items-center justify-center text-white shadow-md shadow-coral-500/25 ring-1 ring-white/60">
@@ -1214,6 +1216,7 @@ export const App: React.FC = () => {
           </div>
         </div>
       )}
+      </div>
 
       {/* Family & ITS Profile Modal */}
       <FamilyProfileModal

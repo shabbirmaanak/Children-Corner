@@ -52,20 +52,17 @@
     print-color-adjust: exact !important;
   }
 
-  /* Hide entire application shell when printing */
-  body > * {
+  /* Completely hide all screen UI */
+  #studio-main-screen,
+  header,
+  aside,
+  nav,
+  .no-print {
+    display: none !important;
     visibility: hidden !important;
   }
 
   /* Isolate and display modal blueprint */
-  #root, 
-  #print-blueprint-modal-overlay,
-  #print-blueprint-modal-card,
-  #print-blueprint-root,
-  #print-blueprint-root * {
-    visibility: visible !important;
-  }
-
   #print-blueprint-modal-overlay {
     position: static !important;
     background: transparent !important;
@@ -76,7 +73,6 @@
     height: auto !important;
     overflow: visible !important;
     display: block !important;
-    z-index: 9999 !important;
   }
 
   #print-blueprint-modal-card {
@@ -92,10 +88,6 @@
     padding: 0 !important;
     margin: 0 !important;
     background: transparent !important;
-  }
-
-  .no-print {
-    display: none !important;
   }
 
   #print-blueprint-root {

@@ -1,4 +1,4 @@
-import { Box, Door, Point, Violation, DistanceLine, AgeBracket, RoomConfig, ZoneAllocation, WallSide } from '../types/index.ts';
+import { Box, Door, Point, Violation, DistanceLine, AgeBracket, RoomConfig, ZoneAllocation, WallSide, DoorType } from '../types/index.ts';
 
 // Normalize angle into [0, 2pi)
 export function normalizeAngle(rad: number): number {
@@ -38,7 +38,12 @@ export function getOrientedBox(box: Box): { xMin: number; xMax: number; yMin: nu
  * 1. Validate Door Swing against an AABB / Oriented Furniture piece
  */
 export function checkDoorSwingCollision(door: Door, box: Box): boolean {
-  // Rugs are flat floor coverings, so door swing over rugs is generally acceptable unless thick mat
+  // If door is removed or doesn't swing inward, no collision
+  if (!door.hasDoor || door.swingType === 'none' || door.swingType === 'open_arch' || door.swingType === 'sliding' || door.swingType === 'outward') {
+    return false;
+  }
+
+  // Rugs are flat floor coverings, so door swing over rugs is generally acceptable
   if (box.category === 'rug') return false;
 
   const ob = getOrientedBox(box);
@@ -90,7 +95,6 @@ export function checkDoorSwingCollision(door: Door, box: Box): boolean {
     }
   }
 
-  // 5. Line segment tests for edges of the box intersecting sector arc / radial rays
   return false;
 }
 
@@ -115,7 +119,6 @@ export function calculateBoxDistanceWithPoints(a: Box, b: Box): {
 
   const distance = Math.hypot(deltaX, deltaY);
 
-  // Compute closest connection points between the two rectangles
   let p1x: number;
   let p2x: number;
 
@@ -126,7 +129,6 @@ export function calculateBoxDistanceWithPoints(a: Box, b: Box): {
     p1x = obA.xMin;
     p2x = obB.xMax;
   } else {
-    // Overlapping in X
     const overlapMinX = Math.max(obA.xMin, obB.xMin);
     const overlapMaxX = Math.min(obA.xMax, obB.xMax);
     const midX = (overlapMinX + overlapMaxX) / 2;
@@ -144,9 +146,8 @@ export function calculateBoxDistanceWithPoints(a: Box, b: Box): {
     p1y = obA.yMin;
     p2y = obB.yMax;
   } else {
-    // Overlapping in Y
     const overlapMinY = Math.max(obA.yMin, obB.yMin);
-    const overlapMaxY = Math.min(obA.yMax, obB.yMax);
+    const overlapMaxY = Math.min(obA.yMin, obB.yMax);
     const midY = (overlapMinY + overlapMaxY) / 2;
     p1y = midY;
     p2y = midY;
@@ -179,7 +180,6 @@ export function auditRoomCirculation(
   const violations: Violation[] = [];
   const distanceLines: DistanceLine[] = [];
 
-  // Ergonomic Shelf Height Caps by Age Bracket
   const maxShelfHeightMap: Record<AgeBracket, number> = {
     '0-2': 60,
     '3-5': 90,
@@ -188,19 +188,21 @@ export function auditRoomCirculation(
   };
   const maxAllowedShelfHeight = maxShelfHeightMap[roomConfig.ageBracket];
 
-  // Pass 1: Door Sweeps (CRITICAL)
-  for (const door of doors) {
-    for (const item of furniture) {
-      if (checkDoorSwingCollision(door, item)) {
-        violations.push({
-          id: `door-blocked-${door.id}-${item.id}`,
-          type: 'DOOR_BLOCKED',
-          severity: 'CRITICAL',
-          title: `Entry Door Obstructed`,
-          description: `Door swing radius (${door.leafWidth} cm) collides with "${item.name}". Door must open completely unhindered for fire safety and daily circulation.`,
-          involvedIds: [door.id, item.id],
-          suggestedFix: `Shift "${item.name}" at least ${door.leafWidth + 15} cm away from the door hinge wall corner.`
-        });
+  // Pass 1: Door Sweeps (CRITICAL) - Only if room has door and it swings inward
+  if (roomConfig.hasDoor && roomConfig.doorType === 'inward') {
+    for (const door of doors) {
+      for (const item of furniture) {
+        if (checkDoorSwingCollision(door, item)) {
+          violations.push({
+            id: `door-blocked-${door.id}-${item.id}`,
+            type: 'DOOR_BLOCKED',
+            severity: 'CRITICAL',
+            title: `Entry Door Obstructed`,
+            description: `Door swing radius (${door.leafWidth} cm) collides with "${item.name}". Door must open completely unhindered for fire safety and daily circulation.`,
+            involvedIds: [door.id, item.id],
+            suggestedFix: `Shift "${item.name}" at least ${door.leafWidth + 15} cm away from the door hinge corner.`
+          });
+        }
       }
     }
   }
@@ -221,8 +223,7 @@ export function auditRoomCirculation(
     }
   }
 
-  // Pass 3: Inter-furniture Circulation Corridors (O(N^2) pairwise)
-  // Ignore rug-to-furniture clearance since rugs lie on the floor
+  // Pass 3: Inter-furniture Circulation Corridors
   const solidFurniture = furniture.filter(f => f.category !== 'rug' && f.category !== 'play_mat');
 
   for (let i = 0; i < solidFurniture.length; i++) {
@@ -231,7 +232,6 @@ export function auditRoomCirculation(
       const itemB = solidFurniture[j];
       const { distance, p1, p2 } = calculateBoxDistanceWithPoints(itemA, itemB);
 
-      // Only draw distance visual lines if items are reasonably close (under 130 cm)
       if (distance < 130) {
         distanceLines.push({
           itemAId: itemA.id,
@@ -246,7 +246,6 @@ export function auditRoomCirculation(
       }
 
       if (distance < requiredClearanceCm) {
-        // Check if they are actually overlapping or just tight
         const isOverlapping = distance === 0;
         violations.push({
           id: `corridor-${itemA.id}-${itemB.id}`,
@@ -257,7 +256,7 @@ export function auditRoomCirculation(
             ? `"${itemA.name}" and "${itemB.name}" physically overlap on the floor.`
             : `Walkway between "${itemA.name}" and "${itemB.name}" is ${Math.round(distance)} cm (under ${requiredClearanceCm} cm minimum child-clearance).`,
           involvedIds: [itemA.id, itemB.id],
-          suggestedFix: `Increase gap between "${itemA.name}" and "${itemB.name}" to at least 75 cm to prevent toddler bumping and permit adult access.`
+          suggestedFix: `Increase gap between "${itemA.name}" and "${itemB.name}" to at least 75 cm to prevent toddler bumping.`
         });
       }
     }
@@ -270,28 +269,15 @@ export function auditRoomCirculation(
         id: `shelf-height-${item.id}`,
         type: 'SHELF_TOO_HIGH',
         severity: 'WARNING',
-        title: `Shelf Exceeds Child Ergonomic Reach`,
-        description: `"${item.name}" top shelf (${item.shelfHeightCm} cm) exceeds recommended height (${maxAllowedShelfHeight} cm) for age ${roomConfig.ageBracket}. Leads to climbing hazards or inaccessible materials.`,
+        title: `Shelf Exceeds Child Reach Cap`,
+        description: `"${item.name}" top shelf (${item.shelfHeightCm} cm) exceeds recommended height (${maxAllowedShelfHeight} cm) for age ${roomConfig.ageBracket}.`,
         involvedIds: [item.id],
-        suggestedFix: `Use low-tier storage capped at ${maxAllowedShelfHeight} cm, or reserve upper levels solely for parent-managed item rotation.`
-      });
-    }
-
-    // Shelf Depth check (25cm - 30cm recommended)
-    if (item.category === 'shelf' && item.depthCm && item.depthCm > 35) {
-      violations.push({
-        id: `shelf-depth-${item.id}`,
-        type: 'SHELF_TOO_HIGH',
-        severity: 'INFO',
-        title: `Deep Shelf May Cause Clutter`,
-        description: `"${item.name}" depth is ${item.depthCm} cm. Montessori ergonomic standard is 25–30 cm to prevent double-row item hoarding and foster visual calm.`,
-        involvedIds: [item.id],
-        suggestedFix: `Choose forward-facing display or 28cm book ledges.`
+        suggestedFix: `Use low-tier storage capped at ${maxAllowedShelfHeight} cm.`
       });
     }
   }
 
-  // Calculate overall safety & ergonomic score (0 to 100)
+  // Calculate score
   let score = 100;
   for (const v of violations) {
     if (v.severity === 'CRITICAL') score -= 25;
@@ -304,14 +290,16 @@ export function auditRoomCirculation(
 }
 
 /**
- * 4. Helper to calculate Door Hinge and Swing Angles from Room Wall & Offset
+ * 4. Helper to calculate Door Hinge and Swing Angles
  */
 export function computeDoorGeometry(
-  wall: 'top' | 'right' | 'bottom' | 'left',
+  wall: WallSide,
   offsetCm: number,
   leafWidthCm: number,
   roomWidthCm: number,
-  roomLengthCm: number
+  roomLengthCm: number,
+  hasDoor = true,
+  doorType: DoorType = 'inward'
 ): Door {
   let hinge: Point = { x: 0, y: 0 };
   let startAngle = 0;
@@ -320,25 +308,21 @@ export function computeDoorGeometry(
   switch (wall) {
     case 'top':
       hinge = { x: offsetCm, y: 0 };
-      // Opens into room downwards (y > 0): from 0 (right) to PI/2 (down)
       startAngle = 0;
       endAngle = Math.PI / 2;
       break;
     case 'bottom':
       hinge = { x: offsetCm, y: roomLengthCm };
-      // Opens into room upwards (y < roomLength): from 3*PI/2 (up) to 2*PI (right)
       startAngle = 3 * Math.PI / 2;
       endAngle = 2 * Math.PI;
       break;
     case 'left':
       hinge = { x: 0, y: offsetCm };
-      // Opens into room rightwards (x > 0): from 3*PI/2 (up) to 0 (right) or 0 to PI/2
       startAngle = 0;
       endAngle = Math.PI / 2;
       break;
     case 'right':
       hinge = { x: roomWidthCm, y: offsetCm };
-      // Opens into room leftwards: from PI/2 (down) to PI (left)
       startAngle = Math.PI / 2;
       endAngle = Math.PI;
       break;
@@ -352,7 +336,8 @@ export function computeDoorGeometry(
     hinge,
     startAngle,
     endAngle,
-    swingInward: true
+    swingType: doorType,
+    hasDoor
   };
 }
 
@@ -441,31 +426,20 @@ export function computeZoneAllocations(
 
 /**
  * 6. Wall-Anchor Priority Algorithm (Deterministic Auto Layout Engine)
- * 
- * Rules:
- * Wall 1 (Opposite Entry Door): Anchor the Calm / Sleep Zone (Clear line of sight from door = calm order).
- * Wall with Natural Light (Window Wall): Anchor Focus / Creative Zone (Desk perpendicular to window).
- * Longest Continuous Wall: Anchor Low Modular Storage (toy rotation + forward-facing books).
- * Central Remaining Floor: Automatically allocated as Active Rug Zone.
  */
 export function generateSmartAutoLayout(config: RoomConfig): Box[] {
   const { widthCm, lengthCm, doorWall, windowWall, ageBracket } = config;
   const items: Box[] = [];
 
-  // Determine wall positions
-  // Wall 1: Opposite to entry door
   const oppositeWallMap: Record<WallSide, WallSide> = {
     top: 'bottom',
     bottom: 'top',
     left: 'right',
     right: 'left'
   };
-  const sleepWall = oppositeWallMap[doorWall];
+  const sleepWall = config.hasDoor ? oppositeWallMap[doorWall] : 'top';
 
-  // Helper to place item anchored to a wall
-  // 1. Bed / Sleep & Calm Zone
   if (ageBracket === '0-2') {
-    // Floor Bed (90 x 160 cm) placed along sleepWall
     if (sleepWall === 'bottom') {
       items.push({
         id: 'bed-1',
@@ -484,10 +458,9 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
         lightingKelvin: 2700,
         safetyNotes: 'Ultra-low zero-fall risk; promotes independent morning waking.'
       });
-      // Soft Sensory Crash Mat / Nook next to bed
       items.push({
         id: 'nook-1',
-        name: 'Sensory Reading Mat & Soft Bolsters',
+        name: 'Sensory Reading Mat & Bolsters',
         category: 'nook',
         zone: 'calm',
         x: 210,
@@ -498,10 +471,9 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
         color: '#6366f1',
         priceEst: 75,
         retailer: 'Wesco / Foamnasium',
-        lightingKelvin: 2700,
-        safetyNotes: 'High-density foam, certified non-toxic OEKO-TEX.'
+        lightingKelvin: 2700
       });
-    } else if (sleepWall === 'top') {
+    } else {
       items.push({
         id: 'bed-1',
         name: 'Montessori Floor Bed (90x160)',
@@ -516,12 +488,11 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
         color: '#f97316',
         priceEst: 189,
         retailer: 'IKEA / Sprout Kids',
-        lightingKelvin: 2700,
-        safetyNotes: 'Ultra-low zero-fall risk.'
+        lightingKelvin: 2700
       });
       items.push({
         id: 'nook-1',
-        name: 'Sensory Reading Mat & Soft Bolsters',
+        name: 'Sensory Reading Mat & Bolsters',
         category: 'nook',
         zone: 'calm',
         x: 210,
@@ -534,77 +505,9 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
         retailer: 'Wesco / Foamnasium',
         lightingKelvin: 2700
       });
-    } else if (sleepWall === 'right') {
-      items.push({
-        id: 'bed-1',
-        name: 'Montessori Floor Bed (90x160)',
-        category: 'bed',
-        zone: 'storage',
-        x: widthCm - 100,
-        y: 30,
-        width: 90,
-        height: 160,
-        rotation: 0,
-        shelfHeightCm: 25,
-        color: '#f97316',
-        priceEst: 189,
-        retailer: 'IKEA / Sprout Kids',
-        lightingKelvin: 2700
-      });
-      items.push({
-        id: 'nook-1',
-        name: 'Sensory Reading Mat & Soft Bolsters',
-        category: 'nook',
-        zone: 'calm',
-        x: widthCm - 90,
-        y: 210,
-        width: 80,
-        height: 100,
-        rotation: 0,
-        color: '#6366f1',
-        priceEst: 75,
-        retailer: 'Wesco / Foamnasium',
-        lightingKelvin: 2700
-      });
-    } else { // left
-      items.push({
-        id: 'bed-1',
-        name: 'Montessori Floor Bed (90x160)',
-        category: 'bed',
-        zone: 'storage',
-        x: 20,
-        y: 30,
-        width: 90,
-        height: 160,
-        rotation: 0,
-        shelfHeightCm: 25,
-        color: '#f97316',
-        priceEst: 189,
-        retailer: 'IKEA / Sprout Kids',
-        lightingKelvin: 2700
-      });
-      items.push({
-        id: 'nook-1',
-        name: 'Sensory Reading Mat & Soft Bolsters',
-        category: 'nook',
-        zone: 'calm',
-        x: 20,
-        y: 210,
-        width: 80,
-        height: 100,
-        rotation: 0,
-        color: '#6366f1',
-        priceEst: 75,
-        retailer: 'Wesco / Foamnasium',
-        lightingKelvin: 2700
-      });
     }
   } else if (ageBracket === '3-5') {
-    // Toddler Bed + Teepee Reading Nook
-    const bedX = sleepWall === 'right' ? widthCm - 95 : 30;
-    const bedY = sleepWall === 'bottom' ? lengthCm - 150 : (sleepWall === 'top' ? 30 : 30);
     const isVertical = sleepWall === 'left' || sleepWall === 'right';
-    
     items.push({
       id: 'bed-1',
       name: 'Low Toddler Bed (80x150)',
@@ -619,14 +522,12 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
       color: '#f97316',
       priceEst: 199,
       retailer: 'IKEA Sniglar / Oeuf',
-      lightingKelvin: 2700,
-      safetyNotes: 'Guardrail on wall side; rounded solid birch edges.'
+      lightingKelvin: 2700
     });
 
-    // Cozy Canopy / Teepee Nook
     items.push({
       id: 'nook-1',
-      name: 'Cozy Teepee Reading Nook & Pouf',
+      name: 'Cozy Teepee Reading Nook',
       category: 'nook',
       zone: 'calm',
       x: isVertical ? (sleepWall === 'right' ? widthCm - 100 : 20) : Math.min(widthCm - 110, 200),
@@ -636,11 +537,10 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
       rotation: 0,
       color: '#6366f1',
       priceEst: 89,
-      retailer: 'Crate & Kids / Pottery Barn',
+      retailer: 'Crate & Kids / Teamson',
       lightingKelvin: 2700
     });
   } else if (ageBracket === '6-8') {
-    // Twin Bed (100x200) + Beanbag quiet reading corner
     const isVertical = sleepWall === 'left' || sleepWall === 'right';
     items.push({
       id: 'bed-1',
@@ -661,7 +561,7 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
 
     items.push({
       id: 'nook-1',
-      name: 'Acoustic Beanbag Reading Nook',
+      name: 'Acoustic Beanbag Reading Corner',
       category: 'nook',
       zone: 'calm',
       x: isVertical ? (sleepWall === 'right' ? widthCm - 100 : 20) : Math.min(widthCm - 100, 250),
@@ -675,7 +575,6 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
       lightingKelvin: 2700
     });
   } else {
-    // 9-12 yrs: Full Twin/Single Bed + Lounge seating
     const isVertical = sleepWall === 'left' || sleepWall === 'right';
     items.push({
       id: 'bed-1',
@@ -711,82 +610,25 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
     });
   }
 
-  // 2. Wall with Natural Light (Window Wall): Focus / Tabletop Zone
-  // Position desk perpendicular to window to avoid glare
+  // 2. Focus Tabletop / Desk
   if (ageBracket === '3-5') {
-    // Toddler craft table (60x90) + Stool
-    if (windowWall === 'top') {
-      items.push({
-        id: 'desk-1',
-        name: 'Toddler Craft Table (60x90)',
-        category: 'desk',
-        zone: 'focus',
-        x: Math.min(widthCm - 110, 180),
-        y: 20,
-        width: 90,
-        height: 60,
-        rotation: 0,
-        shelfHeightCm: 48,
-        color: '#10b981',
-        priceEst: 95,
-        retailer: 'IKEA Flisat',
-        lightingKelvin: 4000,
-        safetyNotes: 'Sensory trofast bins insertable underneath.'
-      });
-    } else if (windowWall === 'bottom') {
-      items.push({
-        id: 'desk-1',
-        name: 'Toddler Craft Table (60x90)',
-        category: 'desk',
-        zone: 'focus',
-        x: Math.min(widthCm - 110, 180),
-        y: lengthCm - 80,
-        width: 90,
-        height: 60,
-        rotation: 0,
-        shelfHeightCm: 48,
-        color: '#10b981',
-        priceEst: 95,
-        retailer: 'IKEA Flisat',
-        lightingKelvin: 4000
-      });
-    } else if (windowWall === 'left') {
-      items.push({
-        id: 'desk-1',
-        name: 'Toddler Craft Table (60x90)',
-        category: 'desk',
-        zone: 'focus',
-        x: 20,
-        y: Math.min(lengthCm - 110, 160),
-        width: 60,
-        height: 90,
-        rotation: 0,
-        shelfHeightCm: 48,
-        color: '#10b981',
-        priceEst: 95,
-        retailer: 'IKEA Flisat',
-        lightingKelvin: 4000
-      });
-    } else { // right
-      items.push({
-        id: 'desk-1',
-        name: 'Toddler Craft Table (60x90)',
-        category: 'desk',
-        zone: 'focus',
-        x: widthCm - 80,
-        y: Math.min(lengthCm - 110, 160),
-        width: 60,
-        height: 90,
-        rotation: 0,
-        shelfHeightCm: 48,
-        color: '#10b981',
-        priceEst: 95,
-        retailer: 'IKEA Flisat',
-        lightingKelvin: 4000
-      });
-    }
+    items.push({
+      id: 'desk-1',
+      name: 'Toddler Craft Table (60x90)',
+      category: 'desk',
+      zone: 'focus',
+      x: Math.min(widthCm - 110, 180),
+      y: 20,
+      width: 90,
+      height: 60,
+      rotation: 0,
+      shelfHeightCm: 48,
+      color: '#10b981',
+      priceEst: 95,
+      retailer: 'IKEA Flisat',
+      lightingKelvin: 4000
+    });
   } else if (ageBracket === '6-8') {
-    // Primary Student Desk (60x110)
     const isHorizontal = windowWall === 'top' || windowWall === 'bottom';
     items.push({
       id: 'desk-1',
@@ -802,11 +644,9 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
       color: '#10b981',
       priceEst: 175,
       retailer: 'Moll / IKEA Pahl',
-      lightingKelvin: 4000,
-      safetyNotes: 'Ergonomic tilt top with anti-pinch dampeners.'
+      lightingKelvin: 4000
     });
   } else if (ageBracket === '9-12') {
-    // Full Student Ergonomic Desk (65x120) + Ergonomic Task Chair
     const isHorizontal = windowWall === 'top' || windowWall === 'bottom';
     items.push({
       id: 'desk-1',
@@ -826,8 +666,7 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
     });
   }
 
-  // 3. Longest Continuous Wall: Anchor Low Modular Storage & Bookcases
-  // Determine available wall not blocked by door or window or bed
+  // 3. Storage Unit
   const walls: WallSide[] = ['top', 'bottom', 'left', 'right'];
   const storageWall = walls.find(w => w !== doorWall && w !== windowWall && w !== sleepWall) || (doorWall !== 'left' ? 'left' : 'right');
 
@@ -856,10 +695,9 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
       color: '#f97316',
       priceEst: 120,
       retailer: 'IKEA Trofast / Kallax',
-      lightingKelvin: 3000,
-      safetyNotes: 'Mandatory anti-tip wall anchor bracket included.'
+      lightingKelvin: 3000
     });
-  } else if (storageWall === 'right') {
+  } else {
     items.push({
       id: 'shelf-1',
       name: ageBracket === '0-2' ? 'Low 2-Tier Toy Rotation Shelf (30x120)' :
@@ -877,51 +715,11 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
       color: '#f97316',
       priceEst: 120,
       retailer: 'IKEA Trofast / Kallax',
-      lightingKelvin: 3000,
-      safetyNotes: 'Mandatory anti-tip wall anchor bracket.'
-    });
-  } else if (storageWall === 'bottom') {
-    items.push({
-      id: 'shelf-1',
-      name: 'Modular Low Storage Shelf (140x35)',
-      category: 'shelf',
-      zone: 'storage',
-      x: Math.max(20, Math.min(widthCm - 160, 160)),
-      y: lengthCm - 55,
-      width: 140,
-      height: 35,
-      rotation: 0,
-      shelfHeightCm: maxShelfHeightByAge[ageBracket],
-      depthCm: 30,
-      color: '#f97316',
-      priceEst: 120,
-      retailer: 'IKEA Trofast / Kallax',
-      lightingKelvin: 3000,
-      safetyNotes: 'Mandatory anti-tip wall anchor bracket.'
-    });
-  } else {
-    items.push({
-      id: 'shelf-1',
-      name: 'Modular Low Storage Shelf (140x35)',
-      category: 'shelf',
-      zone: 'storage',
-      x: Math.max(20, Math.min(widthCm - 160, 160)),
-      y: 20,
-      width: 140,
-      height: 35,
-      rotation: 0,
-      shelfHeightCm: maxShelfHeightByAge[ageBracket],
-      depthCm: 30,
-      color: '#f97316',
-      priceEst: 120,
-      retailer: 'IKEA Trofast / Kallax',
-      lightingKelvin: 3000,
-      safetyNotes: 'Mandatory anti-tip wall anchor bracket.'
+      lightingKelvin: 3000
     });
   }
 
-  // 4. Central Remaining Floor: Active Play Rug Zone
-  // Dimensions scaled by room dimensions and age allocation
+  // 4. Central Rug
   const rugWidth = Math.min(widthCm - 140, ageBracket === '0-2' ? 180 : (ageBracket === '3-5' ? 160 : 140));
   const rugHeight = Math.min(lengthCm - 140, ageBracket === '0-2' ? 180 : (ageBracket === '3-5' ? 160 : 140));
   const rugCenterX = (widthCm - rugWidth) / 2;
@@ -929,7 +727,7 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
 
   items.unshift({
     id: 'rug-center',
-    name: ageBracket === '0-2' ? 'Non-Toxic Gross Motor Crawling Mat' :
+    name: ageBracket === '0-2' ? 'Gross Motor Crawling Mat' :
           ageBracket === '3-5' ? 'Organic Cotton Active Play Rug' :
           'Acoustic Geometric Play Rug',
     category: 'rug',
@@ -941,8 +739,7 @@ export function generateSmartAutoLayout(config: RoomConfig): Box[] {
     rotation: 0,
     color: '#f59e0b',
     priceEst: 145,
-    retailer: 'Ruggable / Lorena Canals',
-    safetyNotes: 'OEKO-TEX Class 1 / GOTS Certified Organic, machine washable.'
+    retailer: 'Lorena Canals / Ruggable'
   });
 
   return items;

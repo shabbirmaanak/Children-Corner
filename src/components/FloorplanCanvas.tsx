@@ -81,7 +81,9 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     roomConfig.doorOffsetCm,
     roomConfig.doorLeafWidthCm,
     roomConfig.widthCm,
-    roomConfig.lengthCm
+    roomConfig.lengthCm,
+    roomConfig.hasDoor,
+    roomConfig.doorType
   );
 
   // Helper: Convert Room Coordinates (cm) to Canvas Screen Pixels
@@ -234,122 +236,201 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     }
     ctx.restore();
 
-    // 3. Draw Door Swept Area (Mathematical Sector Arc)
-    ctx.save();
-    const doorHingeScreen = roomToScreen(door.hinge.x, door.hinge.y, scale, originX, originY);
-    const doorRadiusScreen = door.leafWidth * scale;
+    // 3. Draw Door Swept Area / Entryway Visuals
+    if (door.hasDoor && door.swingType !== 'none') {
+      ctx.save();
+      const doorHingeScreen = roomToScreen(door.hinge.x, door.hinge.y, scale, originX, originY);
+      const doorRadiusScreen = door.leafWidth * scale;
 
-    // Fill arc sector
-    ctx.beginPath();
-    ctx.moveTo(doorHingeScreen.x, doorHingeScreen.y);
-    ctx.arc(
-      doorHingeScreen.x,
-      doorHingeScreen.y,
-      doorRadiusScreen,
-      door.startAngle,
-      door.endAngle,
-      false
-    );
-    ctx.closePath();
+      if (door.swingType === 'inward') {
+        // Standard Inward 90-degree Sector
+        ctx.beginPath();
+        ctx.moveTo(doorHingeScreen.x, doorHingeScreen.y);
+        ctx.arc(
+          doorHingeScreen.x,
+          doorHingeScreen.y,
+          doorRadiusScreen,
+          door.startAngle,
+          door.endAngle,
+          false
+        );
+        ctx.closePath();
 
-    if (isDoorColliding) {
-      ctx.fillStyle = 'rgba(239, 68, 68, 0.35)'; // Crimson warning
-      ctx.strokeStyle = '#ef4444';
-      ctx.lineWidth = 2.5;
-      ctx.setLineDash([6, 4]);
-    } else {
-      ctx.fillStyle = 'rgba(59, 130, 246, 0.15)'; // Safe blue
-      ctx.strokeStyle = '#3b82f6';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 4]);
+        if (isDoorColliding) {
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.35)'; // Crimson warning
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([6, 4]);
+        } else {
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.15)'; // Safe blue
+          ctx.strokeStyle = '#3b82f6';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+        }
+        ctx.fill();
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Door Leaf Line
+        const doorLeafEndX = doorHingeScreen.x + Math.cos(door.startAngle) * doorRadiusScreen;
+        const doorLeafEndY = doorHingeScreen.y + Math.sin(door.startAngle) * doorRadiusScreen;
+        ctx.strokeStyle = isDoorColliding ? '#f87171' : '#60a5fa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(doorHingeScreen.x, doorHingeScreen.y);
+        ctx.lineTo(doorLeafEndX, doorLeafEndY);
+        ctx.stroke();
+
+        // Door Hinge Pivot Dot
+        ctx.fillStyle = isDoorColliding ? '#ef4444' : '#3b82f6';
+        ctx.beginPath();
+        ctx.arc(doorHingeScreen.x, doorHingeScreen.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Arc Radius Dimension Line & Callout
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillStyle = isDoorColliding ? '#fca5a5' : '#93c5fd';
+        ctx.fillText(
+          isDoorColliding ? '⚠️ CRITICAL: DOOR BLOCKED' : `Inward Arc (${door.leafWidth}cm)`,
+          doorHingeScreen.x + (door.wall === 'right' ? -140 : 15),
+          doorHingeScreen.y + (door.wall === 'bottom' ? -15 : 20)
+        );
+      } else if (door.swingType === 'outward') {
+        // Outward Swing (draws outward arc outside interior)
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.arc(doorHingeScreen.x, doorHingeScreen.y, doorRadiusScreen, door.startAngle + Math.PI, door.endAngle + Math.PI);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Door Leaf Line opening outward
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(doorHingeScreen.x, doorHingeScreen.y);
+        ctx.lineTo(
+          doorHingeScreen.x + (door.wall === 'bottom' ? 0 : door.wall === 'top' ? 0 : door.wall === 'left' ? -doorRadiusScreen : doorRadiusScreen),
+          doorHingeScreen.y + (door.wall === 'bottom' ? doorRadiusScreen : door.wall === 'top' ? -doorRadiusScreen : 0)
+        );
+        ctx.stroke();
+
+        // Label
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillStyle = '#7dd3fc';
+        ctx.fillText(
+          `Outward Door (${door.leafWidth}cm)`,
+          doorHingeScreen.x + (door.wall === 'right' ? -120 : 15),
+          doorHingeScreen.y + (door.wall === 'bottom' ? 20 : -10)
+        );
+      } else if (door.swingType === 'sliding') {
+        // Sliding / Pocket Door Track
+        const trackLen = doorRadiusScreen;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#a5b4fc';
+        ctx.lineWidth = 3;
+        
+        let trackX = doorHingeScreen.x;
+        let trackY = doorHingeScreen.y;
+        let trackW = door.wall === 'top' || door.wall === 'bottom' ? trackLen : 10;
+        let trackH = door.wall === 'left' || door.wall === 'right' ? trackLen : 10;
+
+        ctx.fillRect(trackX, trackY, trackW, trackH);
+        ctx.strokeRect(trackX, trackY, trackW, trackH);
+
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillStyle = '#c7d2fe';
+        ctx.fillText(
+          `Sliding Track ⇋ (${door.leafWidth}cm)`,
+          trackX + (door.wall === 'right' ? -140 : 10),
+          trackY + (door.wall === 'bottom' ? -10 : 20)
+        );
+      } else if (door.swingType === 'open_arch') {
+        // Open Archway / Passage Gap
+        const archLen = doorRadiusScreen;
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([2, 4]);
+
+        let archX = doorHingeScreen.x;
+        let archY = doorHingeScreen.y;
+        let archW = door.wall === 'top' || door.wall === 'bottom' ? archLen : 12;
+        let archH = door.wall === 'left' || door.wall === 'right' ? archLen : 12;
+
+        ctx.strokeRect(archX, archY, archW, archH);
+        ctx.setLineDash([]);
+
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText(
+          `Open Arch (${door.leafWidth}cm)`,
+          archX + (door.wall === 'right' ? -120 : 10),
+          archY + (door.wall === 'bottom' ? -10 : 20)
+        );
+      }
+      ctx.restore();
     }
-    ctx.fill();
-    ctx.stroke();
-    ctx.setLineDash([]);
 
-    // Door Leaf Line
-    const doorLeafEndX = doorHingeScreen.x + Math.cos(door.startAngle) * doorRadiusScreen;
-    const doorLeafEndY = doorHingeScreen.y + Math.sin(door.startAngle) * doorRadiusScreen;
-    ctx.strokeStyle = isDoorColliding ? '#f87171' : '#60a5fa';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(doorHingeScreen.x, doorHingeScreen.y);
-    ctx.lineTo(doorLeafEndX, doorLeafEndY);
-    ctx.stroke();
+    // 4. Draw Window on Wall with Warm Sunlight Glow (if enabled)
+    if (roomConfig.hasWindow !== false) {
+      ctx.save();
+      let winX = 0, winY = 0, winW = 0, winH = 0;
+      const winWidthScreen = (roomConfig.windowWidthCm || 160) * scale;
+      const winOffsetScreen = (roomConfig.windowOffsetCm || 80) * scale;
+      const wallThick = 12;
 
-    // Door Hinge Pivot Dot
-    ctx.fillStyle = isDoorColliding ? '#ef4444' : '#3b82f6';
-    ctx.beginPath();
-    ctx.arc(doorHingeScreen.x, doorHingeScreen.y, 6, 0, Math.PI * 2);
-    ctx.fill();
+      if (roomConfig.windowWall === 'top') {
+        winX = originX + winOffsetScreen;
+        winY = originY - wallThick / 2;
+        winW = winWidthScreen;
+        winH = wallThick;
+      } else if (roomConfig.windowWall === 'bottom') {
+        winX = originX + winOffsetScreen;
+        winY = originY + roomScreenH - wallThick / 2;
+        winW = winWidthScreen;
+        winH = wallThick;
+      } else if (roomConfig.windowWall === 'left') {
+        winX = originX - wallThick / 2;
+        winY = originY + winOffsetScreen;
+        winW = wallThick;
+        winH = winWidthScreen;
+      } else { // right
+        winX = originX + roomScreenW - wallThick / 2;
+        winY = originY + winOffsetScreen;
+        winW = wallThick;
+        winH = winWidthScreen;
+      }
 
-    // Door Arc Label
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillStyle = isDoorColliding ? '#fca5a5' : '#93c5fd';
-    ctx.fillText(
-      isDoorColliding ? '⚠️ CRITICAL: DOOR BLOCKED' : `Door Arc (${door.leafWidth}cm)`,
-      doorHingeScreen.x + (door.wall === 'right' ? -130 : 15),
-      doorHingeScreen.y + (door.wall === 'bottom' ? -15 : 20)
-    );
-    ctx.restore();
+      // Natural light sunbeam gradient
+      const sunGrad = ctx.createLinearGradient(
+        winX,
+        winY,
+        roomConfig.windowWall === 'left' ? winX + 110 * scale : (roomConfig.windowWall === 'right' ? winX - 110 * scale : winX),
+        roomConfig.windowWall === 'top' ? winY + 110 * scale : (roomConfig.windowWall === 'bottom' ? winY - 110 * scale : winY)
+      );
+      sunGrad.addColorStop(0, 'rgba(251, 191, 36, 0.28)'); // warm amber light
+      sunGrad.addColorStop(1, 'rgba(251, 191, 36, 0.0)');
+      ctx.fillStyle = sunGrad;
+      if (roomConfig.windowWall === 'top') ctx.fillRect(winX, originY, winW, 110 * scale);
+      else if (roomConfig.windowWall === 'bottom') ctx.fillRect(winX, originY + roomScreenH - 110 * scale, winW, 110 * scale);
+      else if (roomConfig.windowWall === 'left') ctx.fillRect(originX, winY, 110 * scale, winH);
+      else ctx.fillRect(originX + roomScreenW - 110 * scale, winY, 110 * scale, winH);
 
-    // 4. Draw Window on Wall with Warm Sunlight Glow
-    ctx.save();
-    let winX = 0, winY = 0, winW = 0, winH = 0;
-    const winWidthScreen = roomConfig.windowWidthCm * scale;
-    const winOffsetScreen = roomConfig.windowOffsetCm * scale;
-    const wallThick = 12;
+      // Window Glass Frame
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(winX, winY, winW, winH);
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(winX, winY, winW, winH);
 
-    if (roomConfig.windowWall === 'top') {
-      winX = originX + winOffsetScreen;
-      winY = originY - wallThick / 2;
-      winW = winWidthScreen;
-      winH = wallThick;
-    } else if (roomConfig.windowWall === 'bottom') {
-      winX = originX + winOffsetScreen;
-      winY = originY + roomScreenH - wallThick / 2;
-      winW = winWidthScreen;
-      winH = wallThick;
-    } else if (roomConfig.windowWall === 'left') {
-      winX = originX - wallThick / 2;
-      winY = originY + winOffsetScreen;
-      winW = wallThick;
-      winH = winWidthScreen;
-    } else { // right
-      winX = originX + roomScreenW - wallThick / 2;
-      winY = originY + winOffsetScreen;
-      winW = wallThick;
-      winH = winWidthScreen;
+      // Window text label
+      ctx.font = 'bold 9px Inter, sans-serif';
+      ctx.fillStyle = '#bae6fd';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Window (${roomConfig.windowWidthCm || 160}cm)`, winX + winW / 2, winY + (roomConfig.windowWall === 'top' ? -8 : winH + 14));
+      ctx.restore();
     }
-
-    // Natural light sunbeam gradient
-    const sunGrad = ctx.createLinearGradient(
-      winX,
-      winY,
-      roomConfig.windowWall === 'left' ? winX + 110 * scale : (roomConfig.windowWall === 'right' ? winX - 110 * scale : winX),
-      roomConfig.windowWall === 'top' ? winY + 110 * scale : (roomConfig.windowWall === 'bottom' ? winY - 110 * scale : winY)
-    );
-    sunGrad.addColorStop(0, 'rgba(251, 191, 36, 0.28)'); // warm amber light
-    sunGrad.addColorStop(1, 'rgba(251, 191, 36, 0.0)');
-    ctx.fillStyle = sunGrad;
-    if (roomConfig.windowWall === 'top') ctx.fillRect(winX, originY, winW, 110 * scale);
-    else if (roomConfig.windowWall === 'bottom') ctx.fillRect(winX, originY + roomScreenH - 110 * scale, winW, 110 * scale);
-    else if (roomConfig.windowWall === 'left') ctx.fillRect(originX, winY, 110 * scale, winH);
-    else ctx.fillRect(originX + roomScreenW - 110 * scale, winY, 110 * scale, winH);
-
-    // Window Glass Frame
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillRect(winX, winY, winW, winH);
-    ctx.strokeStyle = '#0284c7';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(winX, winY, winW, winH);
-
-    // Window text label
-    ctx.font = 'bold 9px Inter, sans-serif';
-    ctx.fillStyle = '#bae6fd';
-    ctx.textAlign = 'center';
-    ctx.fillText(`Window (${roomConfig.windowWidthCm}cm)`, winX + winW / 2, winY + (roomConfig.windowWall === 'top' ? -8 : winH + 14));
-    ctx.restore();
 
     // 5. Draw Furniture Items (Rugs first as base layers)
     const sortedFurniture = [...furniture].sort((a, b) => {

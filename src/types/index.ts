@@ -6,6 +6,8 @@ export type WallSide = 'top' | 'right' | 'bottom' | 'left';
 
 export type UnitType = 'cm' | 'm' | 'ft';
 
+export type DoorType = 'inward' | 'outward' | 'sliding' | 'open_arch' | 'none';
+
 export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'INR' | 'CAD' | 'AUD' | 'AED' | 'JPY';
 
 export interface CurrencyConfig {
@@ -60,7 +62,8 @@ export interface Door {
   hinge: Point;           // computed coordinate (x, y)
   startAngle: number;     // radians [0, 2pi)
   endAngle: number;       // radians [0, 2pi)
-  swingInward: boolean;   // opens inside the room
+  swingType: DoorType;    // inward, outward, sliding, open_arch, none
+  hasDoor: boolean;       // whether door exists
 }
 
 export interface Window {
@@ -68,6 +71,7 @@ export interface Window {
   wall: WallSide;
   positionOffset: number; // offset in cm from start of wall
   width: number;          // window width in cm
+  hasWindow: boolean;
   orientation?: 'North' | 'South' | 'East' | 'West';
 }
 
@@ -93,9 +97,12 @@ export interface RoomConfig {
   exactAgeYears: number;
   widthCm: number;       // e.g. 360 cm (3.6m)
   lengthCm: number;      // e.g. 420 cm (4.2m)
+  hasDoor: boolean;      // toggle whether room has a physical door
+  doorType: DoorType;    // inward, outward, sliding, open_arch, none
   doorWall: WallSide;
   doorOffsetCm: number;
   doorLeafWidthCm: number;
+  hasWindow: boolean;
   windowWall: WallSide;
   windowOffsetCm: number;
   windowWidthCm: number;

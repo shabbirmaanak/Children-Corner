@@ -32,23 +32,102 @@
   background: rgba(62, 180, 137, 0.8);
 }
 
-/* Print Styles for 1-Page Blueprint */
+/* Print Styles for 1-Page Architectural Blueprint */
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
   }
+
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #1c1917 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide entire application shell when printing */
+  body > * {
+    visibility: hidden !important;
+  }
+
+  /* Isolate and display modal blueprint */
+  #root, 
+  #print-blueprint-modal-overlay,
+  #print-blueprint-modal-card,
   #print-blueprint-root,
   #print-blueprint-root * {
-    visibility: visible;
+    visibility: visible !important;
   }
+
+  #print-blueprint-modal-overlay {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    z-index: 9999 !important;
+  }
+
+  #print-blueprint-modal-card {
+    position: static !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
   #print-blueprint-root {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 20px;
-    background: white !important;
-    color: black !important;
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+  }
+
+  #print-blueprint-root * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Clean canvas scaling for print */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Prevent awkward page splits */
+  .border, table, tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }

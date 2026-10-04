@@ -159,10 +159,10 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-md animate-in fade-in overflow-y-auto">
-      <div className="bg-white border border-stone-200 rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+    <div id="print-blueprint-modal-overlay" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-md animate-in fade-in overflow-y-auto">
+      <div id="print-blueprint-modal-card" className="bg-white border border-stone-200 rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto">
         {/* Modal Controls Header */}
-        <div className="flex items-center justify-between p-5 border-b border-stone-200 bg-stone-50/80 backdrop-blur-md">
+        <div className="no-print flex items-center justify-between p-5 border-b border-stone-200 bg-stone-50/80 backdrop-blur-md">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-mint-500 to-azure-500 text-white flex items-center justify-center shadow-lg shadow-azure-500/20 ring-2 ring-white/80">
               <Sparkles className="w-5 h-5" />
@@ -178,7 +178,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-azure-600 to-mint-500 hover:from-azure-500 hover:to-mint-400 text-white font-bold text-xs transition-all shadow-md shadow-azure-500/25"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-azure-600 to-mint-500 hover:from-azure-500 hover:to-mint-400 text-white font-bold text-xs transition-all shadow-md shadow-azure-500/25 cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print / Save PDF</span>
@@ -194,6 +194,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
 
         {/* Printable Blueprint Sheet */}
         <div 
+          id="print-blueprint-root"
           ref={printAreaRef}
           className="p-6 overflow-y-auto space-y-6 bg-birch-50 text-stone-800 flex-1"
         >

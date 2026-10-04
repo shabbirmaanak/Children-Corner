@@ -5,6 +5,7 @@ import {
   AgeBracket,
   UnitType,
   WallSide,
+  DoorType,
   CurrencyCode,
   CURRENCIES
 } from './types/index.ts';
@@ -32,7 +33,8 @@ import {
   X,
   BookOpen,
   Hash,
-  UserCheck
+  UserCheck,
+  Sun
 } from 'lucide-react';
 import { FloorplanCanvas } from './components/FloorplanCanvas.tsx';
 import { CustomItemModal } from './components/CustomItemModal.tsx';
@@ -53,9 +55,12 @@ const DEFAULT_ROOM_CONFIG: RoomConfig = {
   exactAgeYears: 1.5,
   widthCm: 360,
   lengthCm: 420,
+  hasDoor: true,
+  doorType: 'inward',
   doorWall: 'bottom',
   doorOffsetCm: 40,
   doorLeafWidthCm: 85,
+  hasWindow: true,
   windowWall: 'top',
   windowOffsetCm: 80,
   windowWidthCm: 160,

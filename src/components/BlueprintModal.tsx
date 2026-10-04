@@ -151,6 +151,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
         ctx.fillStyle = '#1c1917';
         ctx.textAlign = 'center';
         ctx.fillText(item.name.substring(0, 16), ix + iw / 2, iy + ih / 2 + 3);
+      }
     });
   }, [isOpen, roomConfig, furniture]);
 

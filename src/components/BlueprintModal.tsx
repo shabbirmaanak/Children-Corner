@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { 
   X, 
   Printer, 
@@ -34,8 +34,6 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const printAreaRef = useRef<HTMLDivElement | null>(null);
-
-  const [canvasDataUrl, setCanvasDataUrl] = useState<string | null>(null);
 
   const curr = CURRENCIES[currency];
   const milestone = DEVELOPMENTAL_RULES[roomConfig.ageBracket];
@@ -153,16 +151,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
         ctx.fillStyle = '#1c1917';
         ctx.textAlign = 'center';
         ctx.fillText(item.name.substring(0, 16), ix + iw / 2, iy + ih / 2 + 3);
-      }
     });
-
-    // Store high-resolution data URL for PDF/Print export
-    try {
-      setCanvasDataUrl(canvas.toDataURL('image/png'));
-    } catch (e) {
-      console.error("Canvas export failed", e);
-    }
-
   }, [isOpen, roomConfig, furniture]);
 
   if (!isOpen) return null;
@@ -290,7 +279,7 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
               </div>
             </div>
 
-            {/* 2D Blueprint Floorplan Canvas & High-Res Vector Image */}
+            {/* 2D Blueprint Floorplan Canvas */}
             <div className="border border-stone-200 rounded-3xl p-4 bg-white shadow-sm flex flex-col items-center">
               <div className="w-full flex items-center justify-between text-xs text-stone-500 mb-2">
                 <span className="font-bold text-stone-800 flex items-center gap-1.5">
@@ -300,20 +289,11 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
                 <span className="font-mono text-[11px] text-azure-600 font-bold">Scale: 1:50</span>
               </div>
 
-              {/* Interactive On-Screen Canvas */}
+              {/* 2D Architectural Canvas */}
               <canvas
                 ref={canvasRef}
-                className="rounded-2xl border border-stone-200 shadow-inner max-w-full print:hidden"
+                className="rounded-2xl border border-stone-200 shadow-inner max-w-full block mx-auto"
               />
-
-              {/* High-Resolution Print/PDF Rendered Image */}
-              {canvasDataUrl && (
-                <img
-                  src={canvasDataUrl}
-                  alt="Architectural Floorplan Blueprint"
-                  className="hidden print:block rounded-2xl border border-stone-200 max-w-full max-h-[260px] object-contain mx-auto"
-                />
-              )}
             </div>
 
             {/* Zone Allocations Summary */}

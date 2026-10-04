@@ -109,19 +109,23 @@
 
   /* Multi-Page Pagination & Strict Page Break */
   .print-page {
+    box-sizing: border-box !important;
     page-break-after: always !important;
     break-after: page !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    min-height: 250mm !important;
-    padding-bottom: 5mm !important;
+    width: 100% !important;
+    min-height: 260mm !important;
+    max-height: 275mm !important;
+    padding-bottom: 2mm !important;
   }
 
   .print-page:last-child {
     page-break-after: auto !important;
     break-after: auto !important;
     min-height: auto !important;
+    max-height: none !important;
   }
 
   .print-page-break {
@@ -129,10 +133,9 @@
     break-before: page !important;
   }
 
-  /* Clean canvas scaling for print */
-  canvas {
+  /* Clean image and canvas scaling for print */
+  img, canvas {
     max-width: 100% !important;
-    height: auto !important;
     display: block !important;
     margin: 0 auto !important;
     page-break-inside: avoid !important;

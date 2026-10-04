@@ -158,7 +158,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     const gridMinor = 50 * scale;
     const gridMajor = 100 * scale;
 
-    ctx.strokeStyle = 'rgba(51, 65, 85, 0.2)';
+    ctx.strokeStyle = 'rgba(214, 203, 187, 0.45)';
     ctx.lineWidth = 1;
     for (let x = originX % gridMinor; x < width; x += gridMinor) {
       ctx.beginPath();
@@ -174,7 +174,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     }
 
     // Major grid lines
-    ctx.strokeStyle = 'rgba(71, 85, 105, 0.35)';
+    ctx.strokeStyle = 'rgba(180, 165, 145, 0.6)';
     for (let x = originX % gridMajor; x < width; x += gridMajor) {
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -193,18 +193,19 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     const roomScreenW = roomConfig.widthCm * scale;
     const roomScreenH = roomConfig.lengthCm * scale;
 
-    // Room Floor Background
+    // Room Floor Background (Warm Blonde Scandinavian Birch Wood)
     ctx.save();
-    ctx.fillStyle = '#0f172a'; // slate-900
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-    ctx.shadowBlur = 24;
+    ctx.fillStyle = '#FAF7F2';
+    ctx.shadowColor = 'rgba(140, 120, 90, 0.25)';
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 10;
     ctx.fillRect(originX, originY, roomScreenW, roomScreenH);
     ctx.shadowColor = 'transparent';
 
     // Warm flooring wood plank texture lines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+    ctx.strokeStyle = 'rgba(195, 175, 145, 0.2)';
     ctx.lineWidth = 1;
-    const plankWidth = 22 * scale;
+    const plankWidth = 24 * scale;
     for (let py = originY; py <= originY + roomScreenH; py += plankWidth) {
       ctx.beginPath();
       ctx.moveTo(originX, py);
@@ -215,10 +216,10 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     // Micro-Zone Halos / Underlays
     if (showZones) {
       // Active Play Rug Area Halo
-      const rugHaloPad = 60 * scale;
+      const rugHaloPad = 50 * scale;
       if (roomScreenW > rugHaloPad * 2 && roomScreenH > rugHaloPad * 2) {
-        ctx.fillStyle = 'rgba(245, 158, 11, 0.03)';
-        ctx.strokeStyle = 'rgba(245, 158, 11, 0.15)';
+        ctx.fillStyle = 'rgba(248, 200, 34, 0.06)';
+        ctx.strokeStyle = 'rgba(248, 200, 34, 0.35)';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([6, 6]);
         ctx.beginPath();
@@ -227,7 +228,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
           originY + rugHaloPad,
           roomScreenW - rugHaloPad * 2,
           roomScreenH - rugHaloPad * 2,
-          16
+          18
         );
         ctx.fill();
         ctx.stroke();
@@ -484,49 +485,82 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
       // 5B. Draw Detailed Furniture Visuals
       ctx.save();
       const zoneStyles: Record<string, { bg: string; border: string; text: string; header: string }> = {
-        active: { bg: '#fef3c7', border: '#f59e0b', text: '#78350f', header: '#f59e0b' },
-        calm: { bg: '#e0e7ff', border: '#6366f1', text: '#312e81', header: '#6366f1' },
-        focus: { bg: '#dcfce7', border: '#10b981', text: '#064e3b', header: '#10b981' },
-        storage: { bg: '#ffedd5', border: '#f97316', text: '#7c2d12', header: '#f97316' }
+        active: { bg: '#FEFCE8', border: '#F8C822', text: '#713F12', header: '#F8C822' },   // Sunshine Yellow
+        calm: { bg: '#F0FDF9', border: '#3EB489', text: '#0F766E', header: '#3EB489' },     // Mint Green
+        focus: { bg: '#F0F9FF', border: '#0EA5E9', text: '#0369A1', header: '#0EA5E9' },    // Azure Sky Blue
+        storage: { bg: '#FFF5F3', border: '#FF7052', text: '#7C1D0B', header: '#FF7052' }  // Warm Coral
       };
 
-      const style = zoneStyles[item.zone] || { bg: '#334155', border: '#64748b', text: '#f8fafc', header: '#64748b' };
+      const style = zoneStyles[item.zone] || { bg: '#FFFFFF', border: '#CBD5E1', text: '#1E293B', header: '#94A3B8' };
 
       if (item.category === 'rug') {
-        // Decorative Rug with woven texture and edge stitches
-        ctx.fillStyle = 'rgba(245, 158, 11, 0.12)';
-        ctx.strokeStyle = '#f59e0b';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 4]);
+        // Decorative Geometric Rug matching photo (Azure base + Coral / Mint / Yellow triangles)
+        ctx.fillStyle = 'rgba(14, 165, 233, 0.18)'; // Soft azure
+        ctx.strokeStyle = '#0EA5E9';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.roundRect(screenPos.x, screenPos.y, itemScreenW, itemScreenH, 18);
         ctx.fill();
         ctx.stroke();
-        ctx.setLineDash([]);
 
-        // Inner geometric pattern
-        ctx.strokeStyle = 'rgba(245, 158, 11, 0.25)';
+        // Geometric Triangles inside rug matching the photo!
+        ctx.save();
+        // Coral Triangle Accent
+        ctx.fillStyle = 'rgba(255, 112, 82, 0.35)';
+        ctx.beginPath();
+        ctx.moveTo(screenPos.x + 8, screenPos.y + itemScreenH - 8);
+        ctx.lineTo(screenPos.x + itemScreenW * 0.4, screenPos.y + itemScreenH - 8);
+        ctx.lineTo(screenPos.x + itemScreenW * 0.2, screenPos.y + itemScreenH * 0.5);
+        ctx.closePath();
+        ctx.fill();
+
+        // Sunshine Yellow Triangle Accent
+        ctx.fillStyle = 'rgba(248, 200, 34, 0.4)';
+        ctx.beginPath();
+        ctx.moveTo(screenPos.x + itemScreenW - 8, screenPos.y + 8);
+        ctx.lineTo(screenPos.x + itemScreenW * 0.6, screenPos.y + 8);
+        ctx.lineTo(screenPos.x + itemScreenW * 0.8, screenPos.y + itemScreenH * 0.45);
+        ctx.closePath();
+        ctx.fill();
+
+        // Mint Green Triangle Accent
+        ctx.fillStyle = 'rgba(62, 180, 137, 0.35)';
+        ctx.beginPath();
+        ctx.moveTo(screenPos.x + 8, screenPos.y + 8);
+        ctx.lineTo(screenPos.x + itemScreenW * 0.35, screenPos.y + 8);
+        ctx.lineTo(screenPos.x + itemScreenW * 0.18, screenPos.y + itemScreenH * 0.4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Center Rug Title Pill
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.strokeStyle = '#0EA5E9';
         ctx.lineWidth = 1;
-        ctx.strokeRect(screenPos.x + 8, screenPos.y + 8, itemScreenW - 16, itemScreenH - 16);
+        const pillW = Math.min(itemScreenW - 20, 220);
+        const pillH = 34;
+        ctx.beginPath();
+        ctx.roundRect(screenPos.x + (itemScreenW - pillW) / 2, screenPos.y + (itemScreenH - pillH) / 2, pillW, pillH, 10);
+        ctx.fill();
+        ctx.stroke();
 
-        // Center Rug Title
         ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillStyle = '#d97706';
+        ctx.fillStyle = '#0369A1';
         ctx.textAlign = 'center';
-        ctx.fillText(item.name, screenPos.x + itemScreenW / 2, screenPos.y + itemScreenH / 2 - 4);
-        ctx.font = '500 9px Inter, sans-serif';
-        ctx.fillStyle = '#b45309';
-        ctx.fillText(`Active Play Zone • ${item.width}×${item.height} cm`, screenPos.x + itemScreenW / 2, screenPos.y + itemScreenH / 2 + 12);
+        ctx.fillText(item.name, screenPos.x + itemScreenW / 2, screenPos.y + itemScreenH / 2 - 2);
+        ctx.font = '600 9px Inter, sans-serif';
+        ctx.fillStyle = '#0284C7';
+        ctx.fillText(`Active Play Zone • ${item.width}×${item.height} cm`, screenPos.x + itemScreenW / 2, screenPos.y + itemScreenH / 2 + 10);
       } else {
-        // Solid Furniture with Shadows and Category-Specific Vector Graphics
-        ctx.shadowColor = isSelected ? 'rgba(99, 102, 241, 0.55)' : 'rgba(0, 0, 0, 0.4)';
-        ctx.shadowBlur = isSelected ? 16 : 8;
-        ctx.shadowOffsetY = 4;
+        // Solid Furniture with Soft Ambient Drop Shadows
+        ctx.shadowColor = isSelected ? 'rgba(14, 165, 233, 0.45)' : 'rgba(0, 0, 0, 0.1)';
+        ctx.shadowBlur = isSelected ? 18 : 10;
+        ctx.shadowOffsetY = isSelected ? 4 : 2;
 
         // Base rounded body
         ctx.fillStyle = style.bg;
         ctx.beginPath();
-        ctx.roundRect(screenPos.x, screenPos.y, itemScreenW, itemScreenH, 8);
+        ctx.roundRect(screenPos.x, screenPos.y, itemScreenW, itemScreenH, 10);
         ctx.fill();
 
         ctx.shadowColor = 'transparent';
@@ -534,45 +568,47 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
         // Border outline
         ctx.lineWidth = isSelected ? 3 : (hasCritical ? 2.5 : 1.5);
         ctx.strokeStyle = isSelected 
-          ? '#4f46e5' 
+          ? '#0EA5E9' 
           : hasCritical 
-          ? '#ef4444' 
+          ? '#EF4444' 
           : hasWarning 
-          ? '#f59e0b' 
+          ? '#F59E0B' 
           : style.border;
         ctx.stroke();
 
         // Top Zone Color Bar
         ctx.fillStyle = style.header;
         ctx.beginPath();
-        ctx.roundRect(screenPos.x, screenPos.y, itemScreenW, 5, [8, 8, 0, 0]);
+        ctx.roundRect(screenPos.x, screenPos.y, itemScreenW, 5, [10, 10, 0, 0]);
         ctx.fill();
 
         // Specific category visual embellishments
         if (item.category === 'bed') {
-          // Draw pillow
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-          ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+          // Draw soft pillow
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
           ctx.lineWidth = 1;
           const pillowW = Math.min(itemScreenW - 16, 40 * scale);
           const pillowH = Math.min(itemScreenH - 16, 22 * scale);
           ctx.beginPath();
-          ctx.roundRect(screenPos.x + 8, screenPos.y + 8, pillowW, pillowH, 4);
+          ctx.roundRect(screenPos.x + 8, screenPos.y + 8, pillowW, pillowH, 5);
           ctx.fill();
           ctx.stroke();
         } else if (item.category === 'desk') {
-          // Draw laptop/pad outline
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-          const padW = Math.min(itemScreenW - 20, 30 * scale);
-          const padH = Math.min(itemScreenH - 20, 20 * scale);
-          ctx.fillRect(screenPos.x + (itemScreenW - padW) / 2, screenPos.y + (itemScreenH - padH) / 2, padW, padH);
+          // Draw craft tabletop tray / pad outline
+          ctx.fillStyle = 'rgba(14, 165, 233, 0.12)';
+          const padW = Math.min(itemScreenW - 16, 32 * scale);
+          const padH = Math.min(itemScreenH - 16, 22 * scale);
+          ctx.beginPath();
+          ctx.roundRect(screenPos.x + (itemScreenW - padW) / 2, screenPos.y + (itemScreenH - padH) / 2, padW, padH, 4);
+          ctx.fill();
         } else if (item.category === 'shelf') {
-          // Draw shelf vertical dividers
-          ctx.strokeStyle = 'rgba(0, 0, 0, 0.12)';
-          ctx.lineWidth = 1;
+          // Draw colorful shelf cubby dividers matching coral & yellow bins
           const numDividers = 3;
           for (let d = 1; d < numDividers; d++) {
             const divX = screenPos.x + (itemScreenW / numDividers) * d;
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(divX, screenPos.y + 6);
             ctx.lineTo(divX, screenPos.y + itemScreenH - 6);
@@ -589,8 +625,8 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
         ctx.font = `700 ${titleFontSize}px Inter, sans-serif`;
 
         let displayName = item.name;
-        if (displayName.length > 20 && itemScreenW < 130) {
-          displayName = displayName.substring(0, 18) + '...';
+        if (displayName.length > 22 && itemScreenW < 140) {
+          displayName = displayName.substring(0, 20) + '...';
         }
 
         ctx.fillText(
@@ -601,7 +637,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
 
         if (itemScreenH > 42) {
           ctx.font = `600 ${Math.max(8, titleFontSize - 2)}px Inter, sans-serif`;
-          ctx.fillStyle = hasCritical ? '#dc2626' : style.text;
+          ctx.fillStyle = hasCritical ? '#DC2626' : style.text;
           ctx.fillText(
             `${ob.w} × ${ob.h} cm ${item.shelfHeightCm ? `• Cap:${item.shelfHeightCm}cm` : ''}`, 
             screenPos.x + itemScreenW / 2, 
@@ -611,13 +647,13 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
 
         // Violation Indicator Badge
         if (hasCritical || hasWarning) {
-          ctx.fillStyle = hasCritical ? '#ef4444' : '#f59e0b';
+          ctx.fillStyle = hasCritical ? '#EF4444' : '#F59E0B';
           ctx.beginPath();
           ctx.arc(screenPos.x + itemScreenW - 10, screenPos.y + 10, 8, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.font = 'bold 10px sans-serif';
-          ctx.fillStyle = '#ffffff';
+          ctx.fillStyle = '#FFFFFF';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText('!', screenPos.x + itemScreenW - 10, screenPos.y + 10);
@@ -638,15 +674,15 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
         ctx.setLineDash([4, 3]);
         ctx.moveTo(s1.x, s1.y);
         ctx.lineTo(s2.x, s2.y);
-        ctx.strokeStyle = line.isViolation ? '#ef4444' : 'rgba(251, 191, 36, 0.8)';
+        ctx.strokeStyle = line.isViolation ? '#EF4444' : 'rgba(248, 200, 34, 0.9)';
         ctx.lineWidth = line.isViolation ? 2 : 1.5;
         ctx.stroke();
         ctx.setLineDash([]);
 
-        ctx.fillStyle = line.isViolation ? '#ef4444' : '#f59e0b';
+        ctx.fillStyle = line.isViolation ? '#EF4444' : '#F59E0B';
         ctx.beginPath();
-        ctx.arc(s1.x, s1.y, 3, 0, Math.PI * 2);
-        ctx.arc(s2.x, s2.y, 3, 0, Math.PI * 2);
+        ctx.arc(s1.x, s1.y, 3.5, 0, Math.PI * 2);
+        ctx.arc(s2.x, s2.y, 3.5, 0, Math.PI * 2);
         ctx.fill();
 
         // Measurement pill
@@ -659,15 +695,15 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
         const pillW = textMetrics.width + 12;
         const pillH = 18;
 
-        ctx.fillStyle = line.isViolation ? '#7f1d1d' : '#451a03';
-        ctx.strokeStyle = line.isViolation ? '#ef4444' : '#f59e0b';
+        ctx.fillStyle = line.isViolation ? '#FEE2E2' : '#FEF3C7';
+        ctx.strokeStyle = line.isViolation ? '#EF4444' : '#F59E0B';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.roundRect(midX - pillW / 2, midY - pillH / 2, pillW, pillH, 5);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = line.isViolation ? '#fecaca' : '#fde68a';
+        ctx.fillStyle = line.isViolation ? '#991B1B' : '#92400E';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(text, midX, midY);
@@ -678,21 +714,21 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
 
     // 7. Architectural Walls with Dimension Numbers
     ctx.save();
-    ctx.strokeStyle = '#94a3b8'; // slate-400
+    ctx.strokeStyle = '#334155'; // Dark architectural slate wall
     ctx.lineWidth = 6;
     ctx.strokeRect(originX, originY, roomScreenW, roomScreenH);
 
     // Dimension labels
     ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillStyle = '#e2e8f0';
+    ctx.fillStyle = '#1E293B';
     ctx.textAlign = 'center';
     
     // Width callout
     ctx.fillText(`${(roomConfig.widthCm / 100).toFixed(2)} m (${roomConfig.widthCm} cm)`, originX + roomScreenW / 2, originY - 14);
     
     // Wall orientation tag
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
+    ctx.font = '500 10px Inter, sans-serif';
+    ctx.fillStyle = '#64748B';
     ctx.fillText(`North Wall (Window: ${roomConfig.windowWall}) • South Wall (Door: ${roomConfig.doorWall})`, originX + roomScreenW / 2, originY + roomScreenH + 22);
 
     // Length callout on left wall
@@ -700,7 +736,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
     ctx.translate(originX - 16, originY + roomScreenH / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillStyle = '#e2e8f0';
+    ctx.fillStyle = '#1E293B';
     ctx.fillText(`${(roomConfig.lengthCm / 100).toFixed(2)} m (${roomConfig.lengthCm} cm)`, 0, 0);
     ctx.restore();
 
@@ -866,16 +902,16 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[650px] lg:h-[750px] bg-slate-950 rounded-3xl border border-slate-700/80 overflow-hidden select-none flex flex-col shadow-2xl">
+    <div className="relative w-full h-[650px] lg:h-[750px] bg-[#FAF7F2] rounded-3xl border border-stone-200/90 overflow-hidden select-none flex flex-col shadow-xl shadow-stone-200/60">
       {/* Top Canvas Toolbar */}
       <div className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
         {/* Left Toggles */}
-        <div className="flex items-center gap-1.5 bg-slate-900/95 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700/80 shadow-xl pointer-events-auto text-xs">
+        <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-xl p-1.5 rounded-2xl border border-stone-200/80 shadow-lg shadow-stone-200/40 pointer-events-auto text-xs">
           <button
             onClick={() => setShowAuras(!showAuras)}
             title="Toggle 75cm Minkowski Clearance Auras"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition-all ${
-              showAuras ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              showAuras ? 'bg-mint-500 text-white shadow-md shadow-mint-500/20' : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100'
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5" />
@@ -886,7 +922,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
             onClick={() => setShowDimensions(!showDimensions)}
             title="Toggle Gap Measurements"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition-all ${
-              showDimensions ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              showDimensions ? 'bg-azure-500 text-white shadow-md shadow-azure-500/20' : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100'
             }`}
           >
             <Eye className="w-3.5 h-3.5" />
@@ -897,7 +933,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
             onClick={() => setShowZones(!showZones)}
             title="Toggle Micro-Zone Layout Outlines"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition-all ${
-              showZones ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              showZones ? 'bg-sunshine-500 text-stone-900 shadow-md shadow-sunshine-500/20' : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -908,7 +944,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
             onClick={() => setSnapToGrid(!snapToGrid)}
             title="Toggle 10cm Grid Snapping"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition-all ${
-              snapToGrid ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              snapToGrid ? 'bg-coral-500 text-white shadow-md shadow-coral-500/20' : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100'
             }`}
           >
             <Grid className="w-3.5 h-3.5" />
@@ -917,26 +953,26 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
         </div>
 
         {/* Zoom & View Controls */}
-        <div className="flex items-center gap-1 bg-slate-900/95 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-xl pointer-events-auto text-xs">
+        <div className="flex items-center gap-1 bg-white/90 backdrop-blur-xl p-1 rounded-2xl border border-stone-200/80 shadow-lg shadow-stone-200/40 pointer-events-auto text-xs">
           <button
             onClick={() => setZoom(z => Math.min(2.5, z + 0.15))}
-            className="p-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-xl text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
             title="Zoom In"
           >
             <ZoomIn className="w-4 h-4" />
           </button>
-          <span className="px-2 text-[11px] font-mono text-slate-300 font-bold">{Math.round(zoom * 100)}%</span>
+          <span className="px-2 text-[11px] font-mono text-stone-700 font-bold">{Math.round(zoom * 100)}%</span>
           <button
             onClick={() => setZoom(z => Math.max(0.4, z - 0.15))}
-            className="p-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-xl text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
             title="Zoom Out"
           >
             <ZoomOut className="w-4 h-4" />
           </button>
-          <div className="h-4 w-[1px] bg-slate-700 mx-1" />
+          <div className="h-4 w-[1px] bg-stone-200 mx-1" />
           <button
             onClick={fitView}
-            className="p-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1 font-bold"
+            className="p-1.5 rounded-xl text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors flex items-center gap-1 font-bold"
             title="Fit Room to Canvas"
           >
             <Maximize className="w-4 h-4" />
@@ -963,22 +999,22 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
 
       {/* Floating Selected Item Action Toolbar */}
       {selectedItem && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-slate-900/95 backdrop-blur-xl px-5 py-3 rounded-2xl border border-indigo-500/60 shadow-2xl shadow-indigo-500/25 text-xs text-white animate-in slide-in-from-bottom-3">
-          <div className="flex items-center gap-2 mr-2 border-r border-slate-700 pr-3">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-white/95 backdrop-blur-xl px-5 py-3 rounded-2xl border border-azure-400 shadow-2xl shadow-azure-500/20 text-xs text-stone-800 animate-in slide-in-from-bottom-3">
+          <div className="flex items-center gap-2 mr-2 border-r border-stone-200 pr-3">
             <span className={`w-3.5 h-3.5 rounded-full ${
-              selectedItem.zone === 'active' ? 'bg-amber-400' :
-              selectedItem.zone === 'calm' ? 'bg-indigo-400' :
-              selectedItem.zone === 'focus' ? 'bg-emerald-400' : 'bg-orange-400'
+              selectedItem.zone === 'active' ? 'bg-sunshine-400' :
+              selectedItem.zone === 'calm' ? 'bg-mint-400' :
+              selectedItem.zone === 'focus' ? 'bg-azure-400' : 'bg-coral-400'
             }`} />
-            <div className="font-bold text-slate-100">{selectedItem.name}</div>
-            <span className="text-[11px] text-slate-400 font-mono">
+            <div className="font-bold text-stone-900">{selectedItem.name}</div>
+            <span className="text-[11px] text-stone-500 font-mono">
               ({selectedItem.width}×{selectedItem.height} cm • Rot: {selectedItem.rotation || 0}°)
             </span>
           </div>
 
           <button
             onClick={handleRotate}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 transition-all font-bold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-azure-500 text-stone-700 hover:text-white border border-stone-200 transition-all font-bold"
             title="Rotate 90 Degrees"
           >
             <RotateCw className="w-3.5 h-3.5" />
@@ -987,7 +1023,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
 
           <button
             onClick={handleDuplicate}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all font-bold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-200 transition-all font-bold"
             title="Duplicate Item"
           >
             <Copy className="w-3.5 h-3.5" />
@@ -996,7 +1032,7 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
 
           <button
             onClick={handleDelete}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 transition-all font-bold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-200 transition-all font-bold"
             title="Remove from Room"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -1006,12 +1042,12 @@ export const FloorplanCanvas: React.FC<FloorplanCanvasProps> = ({
       )}
 
       {/* Bottom Canvas Status Bar / Legend */}
-      <div className="absolute bottom-3 left-4 z-10 hidden sm:flex items-center gap-3 text-[11px] text-slate-400 bg-slate-900/90 backdrop-blur px-3.5 py-1.5 rounded-2xl border border-slate-800 pointer-events-none">
-        <span className="font-bold text-slate-200">Zoning:</span>
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50" /> Active Play</span>
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400/50" /> Calm Nook</span>
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50" /> Focus Tabletop</span>
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-orange-400 shadow-sm shadow-orange-400/50" /> Sleep / Storage</span>
+      <div className="absolute bottom-3 left-4 z-10 hidden sm:flex items-center gap-3 text-[11px] text-stone-600 bg-white/90 backdrop-blur px-3.5 py-1.5 rounded-2xl border border-stone-200/80 shadow-md shadow-stone-200/30 pointer-events-none">
+        <span className="font-bold text-stone-900">Zoning:</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-sunshine-400 shadow-sm shadow-sunshine-400/50" /> Active Play</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-mint-400 shadow-sm shadow-mint-400/50" /> Calm Nook</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-azure-400 shadow-sm shadow-azure-400/50" /> Focus Tabletop</span>
+        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-coral-400 shadow-sm shadow-coral-400/50" /> Sleep / Storage</span>
       </div>
     </div>
   );

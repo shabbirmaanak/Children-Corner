@@ -364,8 +364,8 @@ export function computeZoneAllocations(
     {
       zone: 'active',
       label: 'Active Play Area',
-      color: '#f59e0b',
-      bgLight: 'rgba(245, 158, 11, 0.12)',
+      color: '#f8c822',
+      bgLight: 'rgba(248, 200, 34, 0.15)',
       targetPercent: Math.round(currentRatio.active * 100),
       targetAreaSqM: +(netAreaSqM * currentRatio.active).toFixed(2),
       actualPlacedAreaSqM: 0,
@@ -380,13 +380,13 @@ export function computeZoneAllocations(
     {
       zone: 'calm',
       label: 'Calm / Sensory Nook',
-      color: '#6366f1',
-      bgLight: 'rgba(99, 102, 241, 0.12)',
+      color: '#3eb489',
+      bgLight: 'rgba(62, 180, 137, 0.15)',
       targetPercent: Math.round(currentRatio.calm * 100),
       targetAreaSqM: +(netAreaSqM * currentRatio.calm).toFixed(2),
       actualPlacedAreaSqM: 0,
       description: ageBracket === '0-2' ? 'Sensory cuddle nest, floor mattress, dimmable 2700K lamp' :
-                   ageBracket === '3-5' ? 'Cozy reading teepee, weighted sensory cushion, forward book ledge' :
+                   ageBracket === '3-5' ? 'Mint canopy reading corner, floor cushion & front-facing book ledges' :
                    ageBracket === '6-8' ? 'Quiet reading nook, acoustic privacy drape, beanbag' :
                    'Personal decompression retreat, sensory pod chair, audio listening station',
       milestoneRationale: 'Provides emotional regulation & decompression away from high-stimulus zones'
@@ -394,13 +394,13 @@ export function computeZoneAllocations(
     {
       zone: 'focus',
       label: 'Focus / Tabletop',
-      color: '#10b981',
-      bgLight: 'rgba(16, 185, 129, 0.12)',
+      color: '#0ea5e9',
+      bgLight: 'rgba(14, 165, 233, 0.15)',
       targetPercent: Math.round(currentRatio.focus * 100),
       targetAreaSqM: +(netAreaSqM * currentRatio.focus).toFixed(2),
       actualPlacedAreaSqM: 0,
       description: ageBracket === '0-2' ? 'None (Focus is integrated into floor manipulation)' :
-                   ageBracket === '3-5' ? 'Toddler craft & sensory table (45cm height), dual stools' :
+                   ageBracket === '3-5' ? 'Sensory craft table (45cm height), dual activity chairs & tray' :
                    ageBracket === '6-8' ? 'Ergonomic study desk (58-64cm height), task lamp (4000K), pencil station' :
                    'Full ergonomic teen workstation, dual-tier shelving, laptop space & study task lighting',
       milestoneRationale: ageBracket === '0-2' ? 'Not applicable for infants' :
@@ -410,13 +410,13 @@ export function computeZoneAllocations(
     {
       zone: 'storage',
       label: 'Sleep / Storage',
-      color: '#f97316',
-      bgLight: 'rgba(249, 115, 22, 0.12)',
+      color: '#ff7052',
+      bgLight: 'rgba(255, 112, 82, 0.15)',
       targetPercent: Math.round(currentRatio.storage * 100),
       targetAreaSqM: +(netAreaSqM * currentRatio.storage).toFixed(2),
       actualPlacedAreaSqM: 0,
       description: ageBracket === '0-2' ? 'Montessori floor bed (90x160cm) + low 2-tier open bins (<60cm)' :
-                   ageBracket === '3-5' ? 'Low toddler bed + accessible cubbies & dressing wardrobe (<90cm)' :
+                   ageBracket === '3-5' ? 'Low birch cubby shelving with accessible coral & yellow toy bins' :
                    ageBracket === '6-8' ? 'Twin bed with under-bed drawers + 3-tier modular shelf (<130cm)' :
                    'Full twin bed + vertical wardrobe, drawer chest & private keepsake locker',
       milestoneRationale: 'Builds self-dressing independence, routine predictability & tidy habits'

@@ -57,43 +57,43 @@ export const CustomItemModal: React.FC<CustomItemModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-md animate-in fade-in">
+      <div className="bg-white border border-stone-200 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+        <div className="flex items-center justify-between border-b border-stone-200 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-mint-500 to-azure-500 text-white flex items-center justify-center shadow-lg shadow-azure-500/20 ring-2 ring-white/80">
               <Plus className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white font-display">Add Custom Measured Item</h3>
-              <p className="text-xs text-slate-400">Specify exact dimensions, category, and price in {curr.code}</p>
+              <h3 className="text-base font-bold text-stone-900 font-display">Add Custom Measured Item</h3>
+              <p className="text-xs text-stone-500">Specify exact dimensions, category, and price in {curr.code}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-100">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-slate-300 font-bold mb-1">Item Title / Description</label>
+            <label className="block text-stone-700 font-bold mb-1">Item Title / Description</label>
             <input
               type="text"
               required
-              placeholder="e.g. Pikler Climbing Triangle, Rocking Chair..."
+              placeholder="e.g. Pikler Climbing Triangle, Reading Canopy..."
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500"
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white shadow-xs"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Target Zone</label>
+              <label className="block text-stone-700 font-bold mb-1">Target Zone</label>
               <select
                 value={zone}
                 onChange={(e) => setZone(e.target.value as ZoneType)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white shadow-xs"
               >
                 <option value="active">Active Play Area</option>
                 <option value="calm">Calm / Sensory Nook</option>
@@ -103,11 +103,11 @@ export const CustomItemModal: React.FC<CustomItemModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Category Type</label>
+              <label className="block text-stone-700 font-bold mb-1">Category Type</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white shadow-xs"
               >
                 <option value="custom">Custom Furniture</option>
                 <option value="play_mat">Play Mat / Gym</option>
@@ -123,33 +123,33 @@ export const CustomItemModal: React.FC<CustomItemModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Width (cm)</label>
+              <label className="block text-stone-700 font-bold mb-1">Width (cm)</label>
               <input
                 type="number"
                 min="10"
                 max="400"
                 value={widthCm}
                 onChange={(e) => setWidthCm(Number(e.target.value))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500 font-mono"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white font-mono shadow-xs"
               />
             </div>
 
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Depth / Height (cm)</label>
+              <label className="block text-stone-700 font-bold mb-1">Depth / Height (cm)</label>
               <input
                 type="number"
                 min="10"
                 max="400"
                 value={heightCm}
                 onChange={(e) => setHeightCm(Number(e.target.value))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500 font-mono"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white font-mono shadow-xs"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Shelf Reach Height (cm, optional)</label>
+              <label className="block text-stone-700 font-bold mb-1">Shelf Reach Height (cm, optional)</label>
               <input
                 type="number"
                 min="0"
@@ -157,33 +157,33 @@ export const CustomItemModal: React.FC<CustomItemModalProps> = ({
                 placeholder="e.g. 60"
                 value={shelfHeightCm || ''}
                 onChange={(e) => setShelfHeightCm(e.target.value ? Number(e.target.value) : undefined)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500 font-mono"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white font-mono shadow-xs"
               />
             </div>
 
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Est. Price ({curr.symbol})</label>
+              <label className="block text-stone-700 font-bold mb-1">Est. Price ({curr.symbol})</label>
               <input
                 type="number"
                 min="0"
                 value={priceInput}
                 onChange={(e) => setPriceInput(Number(e.target.value))}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500 font-mono"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-stone-900 focus:outline-none focus:border-azure-500 focus:bg-white font-mono shadow-xs"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
+          <div className="pt-4 border-t border-stone-200 flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
+              className="px-4 py-2 rounded-xl text-stone-500 hover:text-stone-800 hover:bg-stone-100 font-semibold"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-md shadow-indigo-600/30 transition-all"
+              className="px-5 py-2 rounded-2xl bg-gradient-to-r from-azure-600 to-mint-500 hover:from-azure-500 hover:to-mint-400 text-white font-bold shadow-md shadow-azure-500/25 transition-all"
             >
               Add to Floorplan
             </button>

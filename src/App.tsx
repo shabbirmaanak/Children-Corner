@@ -292,24 +292,24 @@ export const App: React.FC = () => {
   });
 
   return (
-    <div className="h-screen w-screen bg-slate-950 text-slate-100 flex flex-col font-sans overflow-hidden select-none">
-      {/* 1. Sleek Compact Studio Header Bar */}
-      <header className="h-14 bg-slate-900/95 border-b border-slate-800/80 px-4 flex items-center justify-between shrink-0 z-30 backdrop-blur">
+    <div className="h-screen w-screen bg-[#FAF7F2] text-stone-800 flex flex-col font-sans overflow-hidden select-none">
+      {/* 1. Sleek Luminous AI Studio Header Bar */}
+      <header className="h-14 bg-white/90 border-b border-stone-200/80 px-4 flex items-center justify-between shrink-0 z-30 backdrop-blur-xl shadow-xs">
         {/* Brand & Child's Name Inline Editor */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 ring-1 ring-white/20">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-mint-500 via-azure-500 to-coral-500 flex items-center justify-center text-white shadow-md shadow-coral-500/25 ring-1 ring-white/60">
             <Sparkles className="w-4 h-4" />
           </div>
 
           <div className="flex items-center gap-1.5">
-            <h1 className="text-sm font-extrabold tracking-tight text-white font-display hidden sm:inline">
+            <h1 className="text-sm font-extrabold tracking-tight text-stone-900 font-display hidden sm:inline">
               Children's Corner
             </h1>
-            <span className="text-slate-600 hidden sm:inline">•</span>
+            <span className="text-stone-400 hidden sm:inline">•</span>
 
             {/* Editable Child Name Badge */}
             {isEditingChildName ? (
-              <div className="flex items-center gap-1 bg-slate-800 rounded-lg px-2 py-0.5 border border-indigo-500">
+              <div className="flex items-center gap-1 bg-white rounded-lg px-2 py-0.5 border border-mint-500 shadow-sm">
                 <input
                   type="text"
                   autoFocus
@@ -317,10 +317,10 @@ export const App: React.FC = () => {
                   onChange={(e) => setTempChildName(e.target.value)}
                   onBlur={handleSaveChildName}
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveChildName()}
-                  className="bg-transparent text-xs font-bold text-white outline-none w-28"
+                  className="bg-transparent text-xs font-bold text-stone-900 outline-none w-28"
                   placeholder="Enter Name..."
                 />
-                <button onClick={handleSaveChildName} className="text-emerald-400">
+                <button onClick={handleSaveChildName} className="text-mint-600">
                   <Check className="w-3 h-3" />
                 </button>
               </div>
@@ -330,37 +330,37 @@ export const App: React.FC = () => {
                   setTempChildName(roomConfig.childName);
                   setIsEditingChildName(true);
                 }}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700/80 border border-slate-700/60 text-xs font-bold text-slate-200 transition-colors group"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-stone-100 hover:bg-stone-200/80 border border-stone-200/80 text-xs font-bold text-stone-700 transition-colors group shadow-xs"
                 title="Click to rename child"
               >
-                <User className="w-3 h-3 text-indigo-400" />
+                <User className="w-3 h-3 text-mint-600" />
                 <span>{roomConfig.childName ? `${roomConfig.childName}'s Room` : '+ Add Child Name'}</span>
-                <span className="text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">✏️</span>
+                <span className="text-[10px] text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity">✏️</span>
               </button>
             )}
 
             {/* ITS52 Badge */}
             <button
               onClick={() => setIsFamilyProfileOpen(true)}
-              className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-950/70 hover:bg-indigo-900/80 border border-indigo-500/40 text-[11px] font-mono font-bold text-indigo-300 transition-colors"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-coral-50 hover:bg-coral-100/80 border border-coral-200/80 text-[11px] font-mono font-bold text-coral-700 transition-colors shadow-xs"
               title="Click to edit ITS52, Mauze, Jamiat, and HOF"
             >
-              <Hash className="w-3 h-3 text-amber-400" />
+              <Hash className="w-3 h-3 text-coral-500" />
               <span>{roomConfig.itsId ? `ITS: ${roomConfig.itsId}` : '+ Add ITS52'}</span>
             </button>
           </div>
         </div>
 
         {/* Center: Quick Age Switcher */}
-        <div className="flex items-center bg-slate-800/90 rounded-xl p-0.5 border border-slate-700/80 text-xs">
+        <div className="flex items-center bg-stone-100/90 rounded-2xl p-1 border border-stone-200/80 text-xs shadow-xs">
           {(['0-2', '3-5', '6-8', '9-12'] as AgeBracket[]).map((age) => (
             <button
               key={age}
               onClick={() => handleAgeChange(age)}
-              className={`px-3 py-1 rounded-lg font-bold text-xs transition-all ${
+              className={`px-3 py-1 rounded-xl font-bold text-xs transition-all ${
                 roomConfig.ageBracket === age
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-stone-900 shadow-sm border border-stone-200/60 font-extrabold'
+                  : 'text-stone-500 hover:text-stone-800'
               }`}
             >
               {age} yrs
@@ -371,15 +371,15 @@ export const App: React.FC = () => {
         {/* Right Actions: Currency Selector + Family Profile + Blueprint */}
         <div className="flex items-center gap-2">
           {/* Currency Dropdown Panel */}
-          <div className="flex items-center bg-slate-800/90 rounded-xl px-2 py-1 border border-slate-700/70 text-xs font-bold text-slate-200">
-            <Coins className="w-3.5 h-3.5 text-amber-400 mr-1.5 shrink-0" />
+          <div className="flex items-center bg-stone-100 rounded-xl px-2 py-1 border border-stone-200 text-xs font-bold text-stone-700 shadow-xs">
+            <Coins className="w-3.5 h-3.5 text-sunshine-600 mr-1.5 shrink-0" />
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-              className="bg-transparent text-xs font-bold text-white outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-stone-800 outline-none cursor-pointer"
             >
               {Object.values(CURRENCIES).map((c) => (
-                <option key={c.code} value={c.code} className="bg-slate-900 text-white">
+                <option key={c.code} value={c.code} className="bg-white text-stone-900">
                   {c.label}
                 </option>
               ))}
@@ -389,25 +389,25 @@ export const App: React.FC = () => {
           {/* Family & ITS Registration Button */}
           <button
             onClick={() => setIsFamilyProfileOpen(true)}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 text-xs font-bold text-stone-700 transition-all shadow-xs"
             title="Manage ITS52, Mauze, Jamiat and HOF Registration"
           >
-            <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+            <UserCheck className="w-3.5 h-3.5 text-azure-500" />
             <span>Family & ITS</span>
           </button>
 
           {/* Spatial Audit Score Badge */}
           <div className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold border ${
             criticalViolationCount > 0
-              ? 'bg-rose-500/15 border-rose-500/40 text-rose-300'
+              ? 'bg-rose-50 border-rose-200 text-rose-700'
               : warningCount > 0
-              ? 'bg-amber-500/15 border-amber-500/40 text-amber-300'
-              : 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+              ? 'bg-amber-50 border-amber-200 text-amber-700'
+              : 'bg-mint-50 border-mint-200 text-mint-700'
           }`}>
             {criticalViolationCount > 0 ? (
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
             ) : (
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-mint-600" />
             )}
             <span>{auditResult.score}% Audit</span>
           </div>
@@ -416,7 +416,7 @@ export const App: React.FC = () => {
           <button
             onClick={handleAutoGenerate}
             title="Auto-generate layout from architectural rules"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 active:scale-95 transition-all"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-to-r from-coral-500 to-sunshine-500 hover:from-coral-400 hover:to-sunshine-400 text-white font-black text-xs shadow-md shadow-coral-500/25 active:scale-95 transition-all"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Auto-Layout</span>
@@ -425,7 +425,7 @@ export const App: React.FC = () => {
           {/* Blueprint Export */}
           <button
             onClick={() => setIsBlueprintOpen(true)}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 active:scale-95 transition-all"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-azure-600 hover:bg-azure-500 text-white font-bold text-xs shadow-md shadow-azure-600/25 active:scale-95 transition-all"
           >
             <Download className="w-3.5 h-3.5" />
             <span className="hidden md:inline">Blueprint</span>
@@ -436,15 +436,15 @@ export const App: React.FC = () => {
       {/* 2. Main Studio Workspace */}
       <div className="flex-1 flex overflow-hidden relative">
         {/* Left Studio Sidebar */}
-        <aside className="w-80 lg:w-96 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 z-20 shadow-xl">
+        <aside className="w-80 lg:w-96 bg-white/85 backdrop-blur-2xl border-r border-stone-200/80 flex flex-col shrink-0 z-20 shadow-xl shadow-stone-200/30">
           {/* Studio Navigation Tabs */}
-          <div className="flex items-center p-1.5 border-b border-slate-800 bg-slate-900/90 gap-1 text-xs">
+          <div className="flex items-center p-2 border-b border-stone-200/80 bg-stone-50/70 gap-1 text-xs">
             <button
               onClick={() => setActiveLeftTab('measure')}
-              className={`flex-1 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              className={`flex-1 py-1.5 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                 activeLeftTab === 'measure'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  ? 'bg-mint-500 text-white shadow-md shadow-mint-500/25'
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-200/60'
               }`}
             >
               <Ruler className="w-3.5 h-3.5" />
@@ -453,22 +453,22 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => setActiveLeftTab('ai')}
-              className={`flex-1 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              className={`flex-1 py-1.5 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                 activeLeftTab === 'ai'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  ? 'bg-gradient-to-r from-coral-500 to-sunshine-500 text-white shadow-md shadow-coral-500/25'
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-200/60'
               }`}
             >
-              <Wand2 className="w-3.5 h-3.5 text-amber-300" />
+              <Wand2 className="w-3.5 h-3.5" />
               <span>AI Stylist</span>
             </button>
 
             <button
               onClick={() => setActiveLeftTab('catalog')}
-              className={`flex-1 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              className={`flex-1 py-1.5 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                 activeLeftTab === 'catalog'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  ? 'bg-azure-500 text-white shadow-md shadow-azure-500/25'
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-200/60'
               }`}
             >
               <Plus className="w-3.5 h-3.5" />
@@ -477,10 +477,10 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => setActiveLeftTab('zones')}
-              className={`flex-1 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              className={`flex-1 py-1.5 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                 activeLeftTab === 'zones'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  ? 'bg-stone-800 text-white shadow-md shadow-stone-800/25'
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-200/60'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -493,18 +493,18 @@ export const App: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">Room Dimensions</h3>
-                  <p className="text-[11px] text-slate-400">Specify perimeter width, length & anchors</p>
+                  <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">Room Dimensions</h3>
+                  <p className="text-[11px] text-stone-500">Specify perimeter width, length & anchors</p>
                 </div>
 
                 {/* Unit Switcher */}
-                <div className="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700 text-[10px]">
+                <div className="flex items-center bg-stone-100 rounded-xl p-0.5 border border-stone-200 text-[10px]">
                   {(['m', 'ft', 'cm'] as UnitType[]).map((u) => (
                     <button
                       key={u}
                       onClick={() => setUnit(u)}
-                      className={`px-2 py-0.5 rounded font-bold ${
-                        unit === u ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                      className={`px-2 py-0.5 rounded-lg font-bold ${
+                        unit === u ? 'bg-mint-500 text-white shadow-xs' : 'text-stone-500 hover:text-stone-900'
                       }`}
                     >
                       {u.toUpperCase()}
@@ -514,15 +514,15 @@ export const App: React.FC = () => {
               </div>
 
               {/* Family Registration Summary Card */}
-              <div className="p-3.5 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 space-y-2">
+              <div className="p-3.5 rounded-2xl bg-coral-50/70 border border-coral-200/80 space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="text-[11px] font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="text-[11px] font-bold text-coral-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <UserCheck className="w-3.5 h-3.5 text-coral-600" />
                     <span>Family & ITS52 Details</span>
                   </div>
                   <button
                     onClick={() => setIsFamilyProfileOpen(true)}
-                    className="text-[10px] font-bold text-indigo-400 hover:text-indigo-200 underline"
+                    className="text-[10px] font-bold text-coral-600 hover:text-coral-800 underline"
                   >
                     {roomConfig.itsId || roomConfig.childName ? 'Edit Details' : '+ Add Details'}
                   </button>
@@ -530,20 +530,20 @@ export const App: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
                   <div>
-                    <span className="text-slate-400 block text-[10px]">Name:</span>
-                    <strong className="text-slate-200">{roomConfig.childName || 'Not set'}</strong>
+                    <span className="text-stone-500 block text-[10px]">Name:</span>
+                    <strong className="text-stone-800">{roomConfig.childName || 'Not set'}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px]">ITS52:</span>
-                    <strong className="text-amber-400 font-mono">{roomConfig.itsId || 'Not set'}</strong>
+                    <span className="text-stone-500 block text-[10px]">ITS52:</span>
+                    <strong className="text-coral-700 font-mono">{roomConfig.itsId || 'Not set'}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px]">Mauze:</span>
-                    <strong className="text-slate-200">{roomConfig.mauze || 'Not set'}</strong>
+                    <span className="text-stone-500 block text-[10px]">Mauze:</span>
+                    <strong className="text-stone-800">{roomConfig.mauze || 'Not set'}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px]">HOF ITS:</span>
-                    <strong className="text-emerald-400 font-mono">{roomConfig.hofIts || 'Not set'}</strong>
+                    <span className="text-stone-500 block text-[10px]">HOF ITS:</span>
+                    <strong className="text-mint-700 font-mono">{roomConfig.hofIts || 'Not set'}</strong>
                   </div>
                 </div>
               </div>
@@ -563,10 +563,10 @@ export const App: React.FC = () => {
                       setWidthInput(preset.w);
                       setLengthInput(preset.l);
                     }}
-                    className={`py-1.5 px-2 rounded-xl border text-xs font-medium transition-all ${
+                    className={`py-1.5 px-2 rounded-xl border text-xs font-semibold transition-all ${
                       widthInput === preset.w && lengthInput === preset.l
-                        ? 'bg-indigo-950/70 border-indigo-500 text-indigo-300 ring-1 ring-indigo-500'
-                        : 'bg-slate-850 border-slate-800 text-slate-300 hover:border-slate-700'
+                        ? 'bg-azure-50 border-azure-400 text-azure-700 ring-1 ring-azure-400 shadow-xs'
+                        : 'bg-white border-stone-200 text-stone-600 hover:border-stone-300'
                     }`}
                   >
                     {preset.label}
@@ -576,10 +576,10 @@ export const App: React.FC = () => {
 
               {/* Room Width & Length Inputs */}
               <div className="space-y-3 pt-1">
-                <div className="p-3 rounded-xl bg-slate-850 border border-slate-800 space-y-2">
+                <div className="p-3 rounded-2xl bg-white border border-stone-200 space-y-2 shadow-xs">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-slate-300">Room Width</span>
-                    <span className="font-mono text-indigo-400 font-bold">{widthInput} cm</span>
+                    <span className="font-bold text-stone-700">Room Width</span>
+                    <span className="font-mono text-azure-600 font-bold">{widthInput} cm</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <input
@@ -587,7 +587,7 @@ export const App: React.FC = () => {
                       step={unit === 'm' ? '0.1' : unit === 'ft' ? '0.5' : '10'}
                       value={cmToUnit(widthInput)}
                       onChange={(e) => handleWidthChange(e.target.value)}
-                      className="w-24 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white font-mono focus:border-indigo-500 focus:outline-none"
+                      className="w-24 bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-stone-900 font-mono focus:border-azure-500 focus:bg-white focus:outline-none"
                     />
                     <input
                       type="range"
@@ -596,15 +596,15 @@ export const App: React.FC = () => {
                       step="10"
                       value={widthInput}
                       onChange={(e) => setWidthInput(Number(e.target.value))}
-                      className="flex-1 accent-indigo-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                      className="flex-1 accent-azure-500 h-1.5 bg-stone-100 rounded-lg cursor-pointer"
                     />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-850 border border-slate-800 space-y-2">
+                <div className="p-3 rounded-2xl bg-white border border-stone-200 space-y-2 shadow-xs">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-slate-300">Room Length</span>
-                    <span className="font-mono text-indigo-400 font-bold">{lengthInput} cm</span>
+                    <span className="font-bold text-stone-700">Room Length</span>
+                    <span className="font-mono text-azure-600 font-bold">{lengthInput} cm</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <input
@@ -612,7 +612,7 @@ export const App: React.FC = () => {
                       step={unit === 'm' ? '0.1' : unit === 'ft' ? '0.5' : '10'}
                       value={cmToUnit(lengthInput)}
                       onChange={(e) => handleLengthChange(e.target.value)}
-                      className="w-24 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white font-mono focus:border-indigo-500 focus:outline-none"
+                      className="w-24 bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-stone-900 font-mono focus:border-azure-500 focus:bg-white focus:outline-none"
                     />
                     <input
                       type="range"
@@ -621,7 +621,7 @@ export const App: React.FC = () => {
                       step="10"
                       value={lengthInput}
                       onChange={(e) => setLengthInput(Number(e.target.value))}
-                      className="flex-1 accent-indigo-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                      className="flex-1 accent-azure-500 h-1.5 bg-stone-100 rounded-lg cursor-pointer"
                     />
                   </div>
                 </div>
@@ -630,10 +630,10 @@ export const App: React.FC = () => {
               {/* Wall Anchors (Door & Window Configuration) */}
               <div className="space-y-3">
                 {/* 1. Door & Entryway Configuration */}
-                <div className="p-3.5 rounded-2xl bg-slate-850 border border-slate-800 space-y-3">
+                <div className="p-3.5 rounded-2xl bg-white border border-stone-200 space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <div className="text-xs font-bold text-slate-200 flex items-center gap-1.5 uppercase tracking-wider">
-                      <Compass className="w-3.5 h-3.5 text-amber-400" />
+                    <div className="text-xs font-bold text-stone-800 flex items-center gap-1.5 uppercase tracking-wider">
+                      <Compass className="w-3.5 h-3.5 text-sunshine-600" />
                       <span>Door & Entry Arc</span>
                     </div>
 
@@ -641,10 +641,10 @@ export const App: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setHasDoor(!hasDoor)}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 border ${
+                      className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1 border ${
                         hasDoor
-                          ? 'bg-indigo-600/30 text-indigo-300 border-indigo-500/50'
-                          : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-slate-200'
+                          ? 'bg-mint-50 text-mint-700 border-mint-200 shadow-xs'
+                          : 'bg-stone-100 text-stone-500 border-stone-200 hover:text-stone-700'
                       }`}
                       title={hasDoor ? "Click to remove door" : "Click to add door"}
                     >
@@ -656,11 +656,11 @@ export const App: React.FC = () => {
                     <div className="space-y-2.5 pt-1">
                       {/* Door Type Selection */}
                       <div className="space-y-1">
-                        <label className="text-[10px] text-slate-400 block font-semibold uppercase">Door Swing / Entryway Type</label>
+                        <label className="text-[10px] text-stone-500 block font-semibold uppercase">Door Swing / Entryway Type</label>
                         <select
                           value={doorType}
                           onChange={(e) => setDoorType(e.target.value as DoorType)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500 font-medium"
+                          className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2.5 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-mint-500 font-medium"
                         >
                           <option value="inward">Inward Swing Door (Standard Arc)</option>
                           <option value="outward">Outward Swing Door (Exterior Sweep)</option>
@@ -672,11 +672,11 @@ export const App: React.FC = () => {
                       {/* Door Wall Placement */}
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <label className="text-[10px] text-slate-400 block mb-1 font-semibold uppercase">Door Wall</label>
+                          <label className="text-[10px] text-stone-500 block mb-1 font-semibold uppercase">Door Wall</label>
                           <select
                             value={doorWall}
                             onChange={(e) => setDoorWall(e.target.value as WallSide)}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-mint-500"
                           >
                             <option value="bottom">South (Bottom)</option>
                             <option value="top">North (Top)</option>
@@ -686,7 +686,7 @@ export const App: React.FC = () => {
                         </div>
 
                         <div>
-                          <label className="text-[10px] text-slate-400 block mb-1 font-semibold uppercase">Door Leaf / Arc (cm)</label>
+                          <label className="text-[10px] text-stone-500 block mb-1 font-semibold uppercase">Door Leaf / Arc (cm)</label>
                           <input
                             type="number"
                             min="60"
@@ -694,16 +694,16 @@ export const App: React.FC = () => {
                             step="5"
                             value={doorLeafWidth}
                             onChange={(e) => setDoorLeafWidth(Math.max(50, Math.min(130, Number(e.target.value))))}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-indigo-500"
+                            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs font-mono text-stone-800 focus:outline-none focus:border-mint-500"
                           />
                         </div>
                       </div>
 
                       {/* Door Leaf Width Slider */}
                       <div className="space-y-1">
-                        <div className="flex justify-between items-center text-[10px] text-slate-400">
+                        <div className="flex justify-between items-center text-[10px] text-stone-500">
                           <span>Door Arc Radius / Opening Width:</span>
-                          <strong className="text-amber-400 font-mono">{doorLeafWidth} cm</strong>
+                          <strong className="text-sunshine-700 font-mono">{doorLeafWidth} cm</strong>
                         </div>
                         <input
                           type="range"
@@ -712,15 +712,15 @@ export const App: React.FC = () => {
                           step="5"
                           value={doorLeafWidth}
                           onChange={(e) => setDoorLeafWidth(Number(e.target.value))}
-                          className="w-full accent-amber-500 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
+                          className="w-full accent-sunshine-500 h-1.5 bg-stone-100 rounded-lg cursor-pointer"
                         />
                       </div>
 
                       {/* Door Offset from Corner Slider */}
                       <div className="space-y-1">
-                        <div className="flex justify-between items-center text-[10px] text-slate-400">
+                        <div className="flex justify-between items-center text-[10px] text-stone-500">
                           <span>Position Offset from Corner:</span>
-                          <strong className="text-indigo-400 font-mono">{doorOffset} cm</strong>
+                          <strong className="text-azure-600 font-mono">{doorOffset} cm</strong>
                         </div>
                         <input
                           type="range"
@@ -729,33 +729,33 @@ export const App: React.FC = () => {
                           step="5"
                           value={doorOffset}
                           onChange={(e) => setDoorOffset(Number(e.target.value))}
-                          className="w-full accent-indigo-500 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
+                          className="w-full accent-azure-500 h-1.5 bg-stone-100 rounded-lg cursor-pointer"
                         />
                       </div>
                     </div>
                   ) : (
-                    <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
-                      <span className="text-slate-500">🚪</span>
+                    <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-[11px] text-stone-500 flex items-center gap-2">
+                      <span className="text-stone-400">🚪</span>
                       <span>No door obstacle in this room. Door swept area collisions are disabled.</span>
                     </div>
                   )}
                 </div>
 
                 {/* 2. Window & Natural Light Configuration */}
-                <div className="p-3.5 rounded-2xl bg-slate-850 border border-slate-800 space-y-3">
+                <div className="p-3.5 rounded-2xl bg-white border border-stone-200 space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <div className="text-xs font-bold text-slate-200 flex items-center gap-1.5 uppercase tracking-wider">
-                      <Sun className="w-3.5 h-3.5 text-amber-300" />
+                    <div className="text-xs font-bold text-stone-800 flex items-center gap-1.5 uppercase tracking-wider">
+                      <Sun className="w-3.5 h-3.5 text-sunshine-500" />
                       <span>Window & Daylight</span>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setHasWindow(!hasWindow)}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 border ${
+                      className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1 border ${
                         hasWindow
-                          ? 'bg-sky-600/30 text-sky-300 border-sky-500/50'
-                          : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-slate-200'
+                          ? 'bg-azure-50 text-azure-700 border-azure-200 shadow-xs'
+                          : 'bg-stone-100 text-stone-500 border-stone-200 hover:text-stone-700'
                       }`}
                       title={hasWindow ? "Click to remove window" : "Click to add window"}
                     >
@@ -767,11 +767,11 @@ export const App: React.FC = () => {
                     <div className="space-y-2.5 pt-1">
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <label className="text-[10px] text-slate-400 block mb-1 font-semibold uppercase">Window Wall</label>
+                          <label className="text-[10px] text-stone-500 block mb-1 font-semibold uppercase">Window Wall</label>
                           <select
                             value={windowWall}
                             onChange={(e) => setWindowWall(e.target.value as WallSide)}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-sky-500"
+                            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs text-stone-800 focus:outline-none focus:border-azure-500"
                           >
                             <option value="top">North (Top)</option>
                             <option value="bottom">South (Bottom)</option>
@@ -781,7 +781,7 @@ export const App: React.FC = () => {
                         </div>
 
                         <div>
-                          <label className="text-[10px] text-slate-400 block mb-1 font-semibold uppercase">Width (cm)</label>
+                          <label className="text-[10px] text-stone-500 block mb-1 font-semibold uppercase">Width (cm)</label>
                           <input
                             type="number"
                             min="60"
@@ -789,16 +789,16 @@ export const App: React.FC = () => {
                             step="10"
                             value={windowWidth}
                             onChange={(e) => setWindowWidth(Math.max(40, Math.min(350, Number(e.target.value))))}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-sky-500"
+                            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-1.5 text-xs font-mono text-stone-800 focus:outline-none focus:border-azure-500"
                           />
                         </div>
                       </div>
 
                       {/* Window Position Offset Slider */}
                       <div className="space-y-1">
-                        <div className="flex justify-between items-center text-[10px] text-slate-400">
+                        <div className="flex justify-between items-center text-[10px] text-stone-500">
                           <span>Window Position Offset:</span>
-                          <strong className="text-sky-400 font-mono">{windowOffset} cm</strong>
+                          <strong className="text-azure-600 font-mono">{windowOffset} cm</strong>
                         </div>
                         <input
                           type="range"
@@ -807,7 +807,7 @@ export const App: React.FC = () => {
                           step="10"
                           value={windowOffset}
                           onChange={(e) => setWindowOffset(Number(e.target.value))}
-                          className="w-full accent-sky-500 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
+                          className="w-full accent-azure-500 h-1.5 bg-stone-100 rounded-lg cursor-pointer"
                         />
                       </div>
                     </div>
@@ -819,7 +819,7 @@ export const App: React.FC = () => {
               <button
                 onClick={handleApplyMeasurements}
                 disabled={isApplying}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-2xl bg-gradient-to-r from-coral-500 via-coral-400 to-sunshine-500 hover:from-coral-600 hover:to-sunshine-600 text-white font-black text-xs shadow-lg shadow-coral-500/25 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
                 {isApplying ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
@@ -838,19 +838,19 @@ export const App: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Wand2 className="w-3.5 h-3.5 text-amber-300" />
+                  <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Wand2 className="w-3.5 h-3.5 text-coral-500" />
                     <span>AI Room Stylist</span>
                   </h3>
-                  <p className="text-[11px] text-slate-400">Natural language layout generator</p>
+                  <p className="text-[11px] text-stone-500">Natural language layout generator</p>
                 </div>
 
                 {/* AI Explanation Modal Trigger */}
                 <button
                   onClick={() => setIsAiExplainerOpen(true)}
-                  className="px-2 py-1 rounded-lg bg-indigo-950/60 border border-indigo-500/40 text-[10px] text-indigo-300 font-bold hover:bg-indigo-900/60 transition-colors flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-xl bg-azure-50 border border-azure-200 text-[10px] text-azure-700 font-bold hover:bg-azure-100 transition-colors flex items-center gap-1 shadow-xs"
                 >
-                  <HelpCircle className="w-3 h-3 text-indigo-400" />
+                  <HelpCircle className="w-3 h-3 text-azure-600" />
                   <span>How AI Works</span>
                 </button>
               </div>
@@ -861,37 +861,37 @@ export const App: React.FC = () => {
                   value={aiPrompt}
                   onChange={(e) => setAiPrompt(e.target.value)}
                   placeholder="e.g. 'Montessori room for a 3-year-old with low shelves, cozy reading teepee and soft floor mat'..."
-                  className="w-full bg-slate-850 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500 resize-none placeholder:text-slate-500"
+                  className="w-full bg-white border border-stone-200 rounded-2xl p-3 text-xs text-stone-800 focus:outline-none focus:border-coral-500 resize-none placeholder:text-stone-400 shadow-xs"
                 />
 
                 <button
                   type="submit"
                   disabled={isAiGenerating || !aiPrompt.trim()}
-                  className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 disabled:opacity-50 transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-coral-500 to-sunshine-500 hover:from-coral-600 hover:to-sunshine-600 text-white font-bold text-xs shadow-md shadow-coral-500/20 disabled:opacity-50 transition-all flex items-center justify-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <Sparkles className="w-3.5 h-3.5" />
                   <span>{isAiGenerating ? 'Generating Layout...' : 'Prompt to Layout'}</span>
                 </button>
               </form>
 
               {aiSuccessMsg && (
-                <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-1.5">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <div className="p-2.5 rounded-xl bg-mint-50 border border-mint-200 text-mint-800 text-xs flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-mint-600 shrink-0" />
                   <span>{aiSuccessMsg}</span>
                 </div>
               )}
 
-              <div className="space-y-2 pt-2 border-t border-slate-800">
-                <span className="text-[10px] font-bold text-slate-400 uppercase">Quick Preset Inspirations:</span>
+              <div className="space-y-2 pt-2 border-t border-stone-200">
+                <span className="text-[10px] font-bold text-stone-500 uppercase">Quick Preset Inspirations:</span>
                 <div className="space-y-1.5">
                   {aiPresets.map((preset, idx) => (
                     <button
                       key={idx}
                       onClick={() => setAiPrompt(preset.text)}
-                      className="w-full text-left p-2 rounded-lg bg-slate-850 hover:bg-indigo-950/50 border border-slate-800 hover:border-indigo-500/50 text-xs text-slate-300 transition-all"
+                      className="w-full text-left p-2.5 rounded-xl bg-white hover:bg-coral-50/50 border border-stone-200 hover:border-coral-300 text-xs text-stone-700 transition-all shadow-xs"
                     >
-                      <div className="font-semibold text-slate-200">{preset.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5 truncate">{preset.text}</div>
+                      <div className="font-semibold text-stone-900">{preset.label}</div>
+                      <div className="text-[10px] text-stone-500 mt-0.5 truncate">{preset.text}</div>
                     </button>
                   ))}
                 </div>
@@ -903,10 +903,10 @@ export const App: React.FC = () => {
           {activeLeftTab === 'catalog' && (
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider">Ergonomic Catalog ({curr.code})</h3>
+                <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">Ergonomic Catalog ({curr.code})</h3>
                 <button
                   onClick={() => setIsCustomItemOpen(true)}
-                  className="px-2.5 py-1 rounded-lg bg-indigo-600/20 border border-indigo-500/40 text-[11px] text-indigo-300 hover:bg-indigo-600 hover:text-white font-bold flex items-center gap-1 transition-all"
+                  className="px-2.5 py-1 rounded-xl bg-azure-50 border border-azure-200 text-[11px] text-azure-700 hover:bg-azure-500 hover:text-white font-bold flex items-center gap-1 transition-all shadow-xs"
                 >
                   <Plus className="w-3 h-3" />
                   <span>+ Custom Item</span>
@@ -919,7 +919,7 @@ export const App: React.FC = () => {
                 placeholder="Search catalog items..."
                 value={catalogSearch}
                 onChange={(e) => setCatalogSearch(e.target.value)}
-                className="w-full bg-slate-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-azure-500 shadow-xs"
               />
 
               {/* Zone Filter Chips */}
@@ -928,8 +928,8 @@ export const App: React.FC = () => {
                   <button
                     key={z}
                     onClick={() => setCatalogZone(z)}
-                    className={`px-2.5 py-1 rounded-lg capitalize font-medium shrink-0 transition-all ${
-                      catalogZone === z ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
+                    className={`px-2.5 py-1 rounded-xl capitalize font-medium shrink-0 transition-all ${
+                      catalogZone === z ? 'bg-azure-500 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                     }`}
                   >
                     {z}
@@ -942,17 +942,17 @@ export const App: React.FC = () => {
                 {filteredCatalog.map((item) => (
                   <div
                     key={item.catalogId}
-                    className="p-3 rounded-xl bg-slate-850 border border-slate-800 hover:border-slate-700 flex flex-col justify-between gap-2"
+                    className="p-3 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 flex flex-col justify-between gap-2 shadow-xs"
                   >
                     <div className="flex items-start justify-between gap-1">
                       <div>
-                        <div className="text-xs font-bold text-slate-200">{item.name}</div>
-                        <div className="text-[10px] text-slate-400">{item.dimensionsText} • <strong className="text-emerald-400">{formatPrice(item.priceEst)}</strong></div>
+                        <div className="text-xs font-bold text-stone-800">{item.name}</div>
+                        <div className="text-[10px] text-stone-500">{item.dimensionsText} • <strong className="text-mint-700">{formatPrice(item.priceEst)}</strong></div>
                       </div>
-                      <span className={`w-2 h-2 rounded-full mt-1 ${
-                        item.zone === 'active' ? 'bg-amber-400' :
-                        item.zone === 'calm' ? 'bg-indigo-400' :
-                        item.zone === 'focus' ? 'bg-emerald-400' : 'bg-orange-400'
+                      <span className={`w-2.5 h-2.5 rounded-full mt-1 ${
+                        item.zone === 'active' ? 'bg-sunshine-400' :
+                        item.zone === 'calm' ? 'bg-mint-400' :
+                        item.zone === 'focus' ? 'bg-azure-400' : 'bg-coral-400'
                       }`} />
                     </div>
 
@@ -971,7 +971,7 @@ export const App: React.FC = () => {
                         priceEst: item.priceEst,
                         safetyNotes: item.safetyNotes
                       })}
-                      className="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-bold text-[11px] transition-all flex items-center justify-center gap-1"
+                      className="w-full py-1.5 rounded-xl bg-stone-100 hover:bg-azure-500 text-stone-700 hover:text-white font-bold text-[11px] transition-all flex items-center justify-center gap-1"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Place in Room</span>
@@ -986,33 +986,33 @@ export const App: React.FC = () => {
           {activeLeftTab === 'zones' && (
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div className="space-y-1">
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider">Zone Matrix ({roomConfig.ageBracket} yrs)</h3>
-                <p className="text-[11px] text-slate-400">Developmental micro-zone percentage ratios</p>
+                <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">Zone Matrix ({roomConfig.ageBracket} yrs)</h3>
+                <p className="text-[11px] text-stone-500">Developmental micro-zone percentage ratios</p>
               </div>
 
               <div className="space-y-2.5">
                 {allocations.map((alloc) => (
-                  <div key={alloc.zone} className="p-3 rounded-xl bg-slate-850 border border-slate-800 space-y-1.5">
+                  <div key={alloc.zone} className="p-3 rounded-2xl bg-white border border-stone-200 space-y-1.5 shadow-xs">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-white">{alloc.label}</span>
+                      <span className="font-bold text-stone-800">{alloc.label}</span>
                       <span className="font-bold font-mono" style={{ color: alloc.color }}>
                         {alloc.targetPercent}% ({alloc.targetAreaSqM} m²)
                       </span>
                     </div>
-                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden">
                       <div className="h-full rounded-full" style={{ width: `${alloc.targetPercent}%`, backgroundColor: alloc.color }} />
                     </div>
-                    <p className="text-[10px] text-slate-400 leading-relaxed">{alloc.description}</p>
+                    <p className="text-[10px] text-stone-500 leading-relaxed">{alloc.description}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-850 border border-slate-800 space-y-1.5 text-xs">
-                <div className="font-bold text-slate-200">Circadian Lighting Specs:</div>
-                <div className="text-[11px] text-slate-400 space-y-0.5">
-                  <div>• Ambient Room: <strong className="text-amber-300">2700K Warm</strong></div>
-                  <div>• Study Workstation: <strong className="text-emerald-300">4000K Neutral High-CRI</strong></div>
-                  <div>• Reading Nook: <strong className="text-indigo-300">2200K Amber</strong></div>
+              <div className="p-3 rounded-2xl bg-white border border-stone-200 space-y-1.5 text-xs shadow-xs">
+                <div className="font-bold text-stone-800">Circadian Lighting Specs:</div>
+                <div className="text-[11px] text-stone-600 space-y-0.5">
+                  <div>• Ambient Room: <strong className="text-sunshine-700">2700K Warm Linen</strong></div>
+                  <div>• Study Workstation: <strong className="text-azure-700">4000K Neutral High-CRI</strong></div>
+                  <div>• Reading Nook: <strong className="text-coral-700">2200K Soft Amber</strong></div>
                 </div>
               </div>
             </div>
@@ -1020,7 +1020,7 @@ export const App: React.FC = () => {
         </aside>
 
         {/* Center: Full-Height Interactive Canvas */}
-        <main className="flex-1 h-full relative bg-slate-950 flex flex-col overflow-hidden">
+        <main className="flex-1 h-full relative bg-[#FAF7F2] flex flex-col overflow-hidden">
           <FloorplanCanvas
             roomConfig={roomConfig}
             furniture={furniture}
@@ -1034,17 +1034,17 @@ export const App: React.FC = () => {
         </main>
 
         {/* Right Studio Inspector (Live Spatial Audit, Safety & Cost) */}
-        <aside className="w-72 lg:w-80 bg-slate-900 border-l border-slate-800 flex flex-col shrink-0 z-20 overflow-y-auto p-4 space-y-4">
+        <aside className="w-72 lg:w-80 bg-white/85 backdrop-blur-2xl border-l border-stone-200/80 flex flex-col shrink-0 z-20 overflow-y-auto p-4 space-y-4 shadow-xl shadow-stone-200/30">
           {/* Spatial Audit Header */}
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center justify-between border-b border-stone-200 pb-3">
             <div>
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Spatial & Safety Audit</h3>
-              <p className="text-[10px] text-slate-400">75cm Corridors & Door Sweeps</p>
+              <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">Spatial & Safety Audit</h3>
+              <p className="text-[10px] text-stone-500">75cm Corridors & Door Sweeps</p>
             </div>
             <div className={`px-2.5 py-1 rounded-xl text-xs font-bold border ${
-              auditResult.score >= 90 ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300' :
-              auditResult.score >= 70 ? 'bg-amber-950/40 border-amber-500/40 text-amber-300' :
-              'bg-rose-950/40 border-rose-500/40 text-rose-300'
+              auditResult.score >= 90 ? 'bg-mint-50 border-mint-200 text-mint-700' :
+              auditResult.score >= 70 ? 'bg-amber-50 border-amber-200 text-amber-700' :
+              'bg-rose-50 border-rose-200 text-rose-700'
             }`}>
               {auditResult.score}% Compliant
             </div>
@@ -1054,7 +1054,7 @@ export const App: React.FC = () => {
           {auditResult.violations.length > 0 && (
             <button
               onClick={handleAutoFix}
-              className="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all flex items-center justify-center gap-1.5"
+              className="w-full py-2 px-3 rounded-2xl bg-azure-600 hover:bg-azure-500 text-white font-bold text-xs shadow-md shadow-azure-600/25 transition-all flex items-center justify-center gap-1.5"
             >
               <Wrench className="w-3.5 h-3.5" />
               <span>Auto-Resolve ({auditResult.violations.length} Issues)</span>
@@ -1064,24 +1064,24 @@ export const App: React.FC = () => {
           {/* Violations List */}
           <div className="space-y-2">
             {auditResult.violations.length === 0 ? (
-              <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-center space-y-1">
-                <ShieldCheck className="w-6 h-6 text-emerald-400 mx-auto" />
-                <div className="text-xs font-bold text-emerald-300">Perfect Architectural Flow</div>
-                <div className="text-[10px] text-emerald-400/80">Door sweep and ≥75cm walking corridors are fully clear.</div>
+              <div className="p-4 rounded-2xl bg-mint-50/70 border border-mint-200 text-center space-y-1 shadow-xs">
+                <ShieldCheck className="w-6 h-6 text-mint-600 mx-auto" />
+                <div className="text-xs font-bold text-mint-800">Perfect Architectural Flow</div>
+                <div className="text-[10px] text-mint-700/80">Door sweep and ≥75cm walking corridors are fully clear.</div>
               </div>
             ) : (
               auditResult.violations.map((v) => (
                 <div
                   key={v.id}
-                  className={`p-3 rounded-xl border text-xs space-y-1 ${
+                  className={`p-3 rounded-2xl border text-xs space-y-1 shadow-xs ${
                     v.severity === 'CRITICAL'
-                      ? 'bg-rose-950/30 border-rose-500/40 text-rose-200'
-                      : 'bg-amber-950/25 border-amber-500/30 text-amber-200'
+                      ? 'bg-rose-50 border-rose-200 text-rose-800'
+                      : 'bg-amber-50 border-amber-200 text-amber-800'
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
                     <span>{v.title}</span>
-                    <span className="text-[9px] uppercase font-mono px-1.5 py-0.5 rounded bg-black/40">
+                    <span className="text-[9px] uppercase font-mono px-1.5 py-0.5 rounded bg-white/80 border border-stone-200">
                       {v.severity}
                     </span>
                   </div>
@@ -1092,14 +1092,14 @@ export const App: React.FC = () => {
           </div>
 
           {/* Furniture Footprint & Cost Card in Selected Currency */}
-          <div className="p-3.5 rounded-xl bg-slate-850 border border-slate-800 space-y-2 text-xs">
-            <div className="font-bold text-slate-200 flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl bg-white border border-stone-200 space-y-2 text-xs shadow-xs">
+            <div className="font-bold text-stone-800 flex items-center justify-between">
               <span>Layout Inventory</span>
-              <span className="text-amber-400 font-mono font-bold">{furniture.length} items</span>
+              <span className="text-coral-600 font-mono font-bold">{furniture.length} items</span>
             </div>
-            <div className="flex justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800">
+            <div className="flex justify-between text-[11px] text-stone-500 pt-1 border-t border-stone-200">
               <span>Procurement ({curr.code}):</span>
-              <strong className="text-emerald-400 font-mono text-sm">{formatPrice(totalCostUSD)}</strong>
+              <strong className="text-mint-700 font-mono text-sm">{formatPrice(totalCostUSD)}</strong>
             </div>
           </div>
         </aside>
@@ -1107,69 +1107,69 @@ export const App: React.FC = () => {
 
       {/* AI Stylist Explanation Modal */}
       {isAiExplainerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-md animate-in fade-in">
+          <div className="bg-white border border-stone-200 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-stone-200 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-coral-500 to-sunshine-500 text-white flex items-center justify-center shadow-md shadow-coral-500/20">
                   <Wand2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white font-display">How the AI Stylist Operates</h3>
-                  <p className="text-xs text-slate-400">Underlying developmental science & algorithmic pipeline</p>
+                  <h3 className="text-base font-bold text-stone-900 font-display">How the AI Stylist Operates</h3>
+                  <p className="text-xs text-stone-500">Underlying developmental science & algorithmic pipeline</p>
                 </div>
               </div>
-              <button onClick={() => setIsAiExplainerOpen(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-white">
+              <button onClick={() => setIsAiExplainerOpen(false)} className="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-300">
-              <div className="p-4 rounded-2xl bg-slate-850 border border-slate-800 space-y-2">
-                <h4 className="font-bold text-indigo-300 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-indigo-400" />
+            <div className="space-y-4 text-xs text-stone-700">
+              <div className="p-4 rounded-2xl bg-mint-50/60 border border-mint-200 space-y-2">
+                <h4 className="font-bold text-mint-800 flex items-center gap-1.5">
+                  <BookOpen className="w-4 h-4 text-mint-600" />
                   <span>1. Child Developmental Milestone Parsing</span>
                 </h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">
+                <p className="text-stone-600 leading-relaxed text-[11px]">
                   When you input natural prompts (e.g. <em>"Montessori room for a 2-year-old with climbing mat"</em>), the engine extracts child developmental keywords and maps them to anthropometric growth stages (Montessori autonomy, Piaget pre-operational symbolic play, or Primary study habits).
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-850 border border-slate-800 space-y-2">
-                <h4 className="font-bold text-amber-300 flex items-center gap-1.5">
-                  <Layers className="w-4 h-4 text-amber-400" />
+              <div className="p-4 rounded-2xl bg-sunshine-50/60 border border-sunshine-200 space-y-2">
+                <h4 className="font-bold text-sunshine-900 flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-sunshine-600" />
                   <span>2. 4-Zone Area Weighting Engine</span>
                 </h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">
+                <p className="text-stone-600 leading-relaxed text-[11px]">
                   Automatically calculates square-meter footprint ratios for <strong>Active Play</strong>, <strong>Calm / Sensory Nook</strong>, <strong>Focus / Tabletop</strong>, and <strong>Sleep & Storage</strong> based on developmental age guardrails.
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-850 border border-slate-800 space-y-2">
-                <h4 className="font-bold text-emerald-300 flex items-center gap-1.5">
-                  <Compass className="w-4 h-4 text-emerald-400" />
+              <div className="p-4 rounded-2xl bg-azure-50/60 border border-azure-200 space-y-2">
+                <h4 className="font-bold text-azure-800 flex items-center gap-1.5">
+                  <Compass className="w-4 h-4 text-azure-600" />
                   <span>3. Wall-Anchor Priority & Window Light Alignment</span>
                 </h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">
+                <p className="text-stone-600 leading-relaxed text-[11px]">
                   Anchors the <strong>Calm/Sleep Zone</strong> opposite to the door for visual serenity upon entering, places the <strong>Focus Workstation</strong> perpendicular to window natural light to eliminate screen glare, and aligns <strong>Low Storage</strong> along the continuous wall.
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-850 border border-slate-800 space-y-2">
-                <h4 className="font-bold text-sky-300 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-sky-400" />
+              <div className="p-4 rounded-2xl bg-coral-50/60 border border-coral-200 space-y-2">
+                <h4 className="font-bold text-coral-800 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-coral-600" />
                   <span>4. 75cm Minkowski Clearance & Arc Sweep Safety</span>
                 </h4>
-                <p className="text-slate-400 leading-relaxed text-[11px]">
+                <p className="text-stone-600 leading-relaxed text-[11px]">
                   Guarantees that every generated piece maintains a minimum <strong>75 cm clear circulation corridor</strong> and verifies that the door swing sector is 100% unobstructed for emergency egress and toddler safety.
                 </p>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex justify-end">
+            <div className="pt-4 border-t border-stone-200 flex justify-end">
               <button
                 onClick={() => setIsAiExplainerOpen(false)}
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md"
+                className="px-5 py-2 rounded-2xl bg-gradient-to-r from-coral-500 to-sunshine-500 text-white font-bold text-xs shadow-md shadow-coral-500/20"
               >
                 Got It, Thanks!
               </button>

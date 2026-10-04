@@ -32,11 +32,11 @@
   background: rgba(62, 180, 137, 0.8);
 }
 
-/* Print Styles for 1-Page Architectural Blueprint */
+/* Print Styles for Multi-Page Architectural Blueprint */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 8mm;
+    margin: 10mm;
   }
 
   html, body {
@@ -105,6 +105,28 @@
   #print-blueprint-root * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  /* Multi-Page Pagination & Strict Page Break */
+  .print-page {
+    page-break-after: always !important;
+    break-after: page !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 250mm !important;
+    padding-bottom: 5mm !important;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    min-height: auto !important;
+  }
+
+  .print-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
   }
 
   /* Clean canvas scaling for print */

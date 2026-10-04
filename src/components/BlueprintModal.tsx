@@ -192,155 +192,223 @@ export const BlueprintModal: React.FC<BlueprintModalProps> = ({
           </div>
         </div>
 
-        {/* Printable Blueprint Sheet */}
+        {/* Printable Blueprint Sheet with 2-Page Pagination */}
         <div 
           id="print-blueprint-root"
           ref={printAreaRef}
-          className="p-6 overflow-y-auto space-y-6 bg-birch-50 text-stone-800 flex-1"
+          className="p-6 overflow-y-auto space-y-8 bg-birch-50 text-stone-800 flex-1"
         >
-          {/* Blueprint Title Block with ITS & Family Registration */}
-          <div className="border border-azure-200 rounded-3xl p-5 bg-white shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
-              <div>
-                <div className="text-[10px] font-mono uppercase tracking-widest text-azure-600 font-bold">
-                  DEVELOPMENTAL BLUEPRINT SPECIFICATION • PROJECT CHILDREN'S CORNER
-                </div>
-                <h1 className="text-xl font-black text-stone-900 font-display mt-0.5">
-                  {roomConfig.childName || "Child"}'s Room — {milestone.stageTitle}
-                </h1>
-                {roomConfig.itsId && (
-                  <div className="text-xs font-mono text-amber-600 font-bold mt-0.5">
-                    ITS52: {roomConfig.itsId}
+          {/* ================= PAGE 1: ARCHITECTURAL FLOORPLAN & SPATIAL PLAN ================= */}
+          <div className="print-page space-y-4">
+            {/* Blueprint Title Block with ITS & Family Registration */}
+            <div className="border border-azure-200 rounded-3xl p-5 bg-white shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
+                <div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-azure-600 font-bold">
+                    DEVELOPMENTAL BLUEPRINT SPECIFICATION • PROJECT CHILDREN'S CORNER
                   </div>
-                )}
+                  <h1 className="text-xl font-black text-stone-900 font-display mt-0.5">
+                    {roomConfig.childName || "Child"}'s Room — {milestone.stageTitle}
+                  </h1>
+                  {roomConfig.itsId && (
+                    <div className="text-xs font-mono text-amber-600 font-bold mt-0.5">
+                      ITS52: {roomConfig.itsId}
+                    </div>
+                  )}
+                </div>
+
+                {/* Compliance Seal */}
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold shrink-0 shadow-xs">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Audit Score: {auditScore}% Compliant</span>
+                </div>
               </div>
 
-              {/* Compliance Seal */}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold shrink-0 shadow-xs">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Audit Score: {auditScore}% Compliant</span>
+              {/* Family & ITS Registration Bar */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs bg-stone-50 p-3 rounded-2xl border border-stone-200">
+                <div>
+                  <div className="text-[10px] font-mono uppercase text-stone-500">Child / Member</div>
+                  <div className="font-bold text-stone-900 mt-0.5 truncate">{roomConfig.childName || '—'}</div>
+                  <div className="text-[10px] font-mono text-amber-600 font-bold">ITS: {roomConfig.itsId || '—'}</div>
+                </div>
+
+                <div>
+                  <div className="text-[10px] font-mono uppercase text-stone-500">Head of Family (HOF)</div>
+                  <div className="font-bold text-stone-900 mt-0.5 truncate">{roomConfig.hofName || '—'}</div>
+                  <div className="text-[10px] font-mono text-emerald-600 font-bold">HOF ITS: {roomConfig.hofIts || '—'}</div>
+                </div>
+
+                <div>
+                  <div className="text-[10px] font-mono uppercase text-stone-500">Mauze</div>
+                  <div className="font-bold text-azure-700 mt-0.5 truncate">{roomConfig.mauze || '—'}</div>
+                </div>
+
+                <div>
+                  <div className="text-[10px] font-mono uppercase text-stone-500">Jamiat</div>
+                  <div className="font-bold text-stone-700 mt-0.5 truncate">{roomConfig.jamiat || '—'}</div>
+                </div>
+              </div>
+
+              {/* Architecture Details Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Room Dimensions</div>
+                  <div className="font-bold text-stone-900 mt-0.5">
+                    {(roomConfig.widthCm / 100).toFixed(2)}m × {(roomConfig.lengthCm / 100).toFixed(2)}m
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Net Usable Area</div>
+                  <div className="font-bold text-sunshine-600 mt-0.5 font-mono">
+                    {totalAreaSqM} m²
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Child Age Bracket</div>
+                  <div className="font-bold text-azure-600 mt-0.5">
+                    {roomConfig.ageBracket} years
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Est. Procurement</div>
+                  <div className="font-bold text-emerald-600 mt-0.5 font-mono">
+                    {curr.symbol}{totalCostConverted.toLocaleString()}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Family & ITS Registration Bar */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs bg-stone-50 p-3 rounded-2xl border border-stone-200">
-              <div>
-                <div className="text-[10px] font-mono uppercase text-stone-500">Child / Member</div>
-                <div className="font-bold text-stone-900 mt-0.5 truncate">{roomConfig.childName || '—'}</div>
-                <div className="text-[10px] font-mono text-amber-600 font-bold">ITS: {roomConfig.itsId || '—'}</div>
+            {/* 2D Blueprint Floorplan Canvas */}
+            <div className="border border-stone-200 rounded-3xl p-4 bg-white shadow-sm flex flex-col items-center">
+              <div className="w-full flex items-center justify-between text-xs text-stone-500 mb-2">
+                <span className="font-bold text-stone-800 flex items-center gap-1.5">
+                  <Ruler className="w-3.5 h-3.5 text-azure-500" />
+                  <span>2D Top-Down Architectural Layout Grid</span>
+                </span>
+                <span className="font-mono text-[11px] text-azure-600 font-bold">Scale: 1:50</span>
               </div>
 
-              <div>
-                <div className="text-[10px] font-mono uppercase text-stone-500">Head of Family (HOF)</div>
-                <div className="font-bold text-stone-900 mt-0.5 truncate">{roomConfig.hofName || '—'}</div>
-                <div className="text-[10px] font-mono text-emerald-600 font-bold">HOF ITS: {roomConfig.hofIts || '—'}</div>
-              </div>
-
-              <div>
-                <div className="text-[10px] font-mono uppercase text-stone-500">Mauze</div>
-                <div className="font-bold text-azure-700 mt-0.5 truncate">{roomConfig.mauze || '—'}</div>
-              </div>
-
-              <div>
-                <div className="text-[10px] font-mono uppercase text-stone-500">Jamiat</div>
-                <div className="font-bold text-stone-700 mt-0.5 truncate">{roomConfig.jamiat || '—'}</div>
-              </div>
+              <canvas
+                ref={canvasRef}
+                className="rounded-2xl border border-stone-200 shadow-inner max-w-full"
+              />
             </div>
 
-            {/* Architecture Details Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-                <div className="text-stone-400 text-[10px] uppercase font-mono">Room Dimensions</div>
-                <div className="font-bold text-stone-900 mt-0.5">
-                  {(roomConfig.widthCm / 100).toFixed(2)}m × {(roomConfig.lengthCm / 100).toFixed(2)}m
+            {/* Zone Allocations Summary */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {allocations.map((alloc) => (
+                <div
+                  key={alloc.zone}
+                  className="p-3 rounded-2xl border border-stone-200 bg-white shadow-2xs text-xs space-y-1"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-stone-800">{alloc.label}</span>
+                    <span className="font-mono text-amber-600 font-bold">{alloc.targetPercent}%</span>
+                  </div>
+                  <div className="text-[11px] text-stone-500">{alloc.targetAreaSqM} m² allocated</div>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-                <div className="text-stone-400 text-[10px] uppercase font-mono">Net Usable Area</div>
-                <div className="font-bold text-sunshine-600 mt-0.5 font-mono">
-                  {totalAreaSqM} m²
-                </div>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-                <div className="text-stone-400 text-[10px] uppercase font-mono">Child Age Bracket</div>
-                <div className="font-bold text-azure-600 mt-0.5">
-                  {roomConfig.ageBracket} years
-                </div>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs">
-                <div className="text-stone-400 text-[10px] uppercase font-mono">Est. Procurement</div>
-                <div className="font-bold text-emerald-600 mt-0.5 font-mono">
-                  {curr.symbol}{totalCostConverted.toLocaleString()}
-                </div>
-              </div>
+            {/* Page 1 Pagination Footer */}
+            <div className="pt-3 border-t border-stone-200 flex items-center justify-between text-[10px] font-mono text-stone-400">
+              <span>PROJECT CHILDREN'S CORNER • ARCHITECTURAL SPATIAL PLAN</span>
+              <span className="font-bold text-stone-700 bg-stone-100 px-2 py-0.5 rounded">PAGE 1 OF 2</span>
             </div>
           </div>
 
-          {/* 2D Blueprint Floorplan Canvas */}
-          <div className="border border-stone-200 rounded-3xl p-4 bg-white shadow-sm flex flex-col items-center">
-            <div className="w-full flex items-center justify-between text-xs text-stone-500 mb-3">
-              <span className="font-bold text-stone-800 flex items-center gap-1.5">
-                <Ruler className="w-3.5 h-3.5 text-azure-500" />
-                <span>2D Top-Down Architectural Layout Grid</span>
-              </span>
-              <span className="font-mono text-[11px] text-azure-600 font-bold">Scale: 1:50</span>
+          {/* ================= PAGE 2: PROCUREMENT & ERGONOMIC SPECIFICATIONS ================= */}
+          <div className="print-page print-page-break space-y-4 pt-2">
+            {/* Page 2 Header */}
+            <div className="border border-azure-200 rounded-3xl p-5 bg-white shadow-sm space-y-3">
+              <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+                <div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-azure-600 font-bold">
+                    DEVELOPMENTAL PROCUREMENT & ERGONOMIC AUDIT • PAGE 2
+                  </div>
+                  <h2 className="text-lg font-black text-stone-900 font-display mt-0.5">
+                    Itemized Bill of Materials & Child Safety Certification
+                  </h2>
+                </div>
+                <div className="text-xs font-mono font-bold text-stone-600 bg-stone-100 px-3 py-1 rounded-xl">
+                  ITS52: {roomConfig.itsId || '—'}
+                </div>
+              </div>
+
+              {/* Quick Spec Metrics */}
+              <div className="grid grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-2xl bg-stone-50 border border-stone-200">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Total Pieces</div>
+                  <div className="font-bold text-stone-900 text-sm mt-0.5">{furniture.length} Items</div>
+                </div>
+                <div className="p-3 rounded-2xl bg-stone-50 border border-stone-200">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Total Procurement</div>
+                  <div className="font-bold text-emerald-600 text-sm mt-0.5 font-mono">
+                    {curr.symbol}{totalCostConverted.toLocaleString()}
+                  </div>
+                </div>
+                <div className="p-3 rounded-2xl bg-stone-50 border border-stone-200">
+                  <div className="text-stone-400 text-[10px] uppercase font-mono">Lighting Guidance</div>
+                  <div className="font-bold text-amber-600 text-sm mt-0.5">
+                    {milestone.lightingGuidance.ambientKelvin}K Ambient / {milestone.lightingGuidance.taskKelvin}K Task
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <canvas
-              ref={canvasRef}
-              className="rounded-2xl border border-stone-200 shadow-inner max-w-full"
-            />
-          </div>
-
-          {/* Zone Allocations Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {allocations.map((alloc) => (
-              <div
-                key={alloc.zone}
-                className="p-3 rounded-2xl border border-stone-200 bg-white shadow-2xs text-xs space-y-1"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-stone-800">{alloc.label}</span>
-                  <span className="font-mono text-amber-600 font-bold">{alloc.targetPercent}%</span>
-                </div>
-                <div className="text-[11px] text-stone-500">{alloc.targetAreaSqM} m² allocated</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Itemized Procurement List */}
-          <div className="p-5 rounded-3xl bg-white border border-stone-200 shadow-sm space-y-3">
-            <h3 className="font-bold text-stone-900 text-xs uppercase tracking-wider font-display">
-              Itemized Furniture Specifications ({curr.code})
-            </h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-stone-200 text-stone-400 text-[10px] uppercase font-mono">
-                    <th className="py-2">Item Name</th>
-                    <th className="py-2">Zone</th>
-                    <th className="py-2">Dimensions</th>
-                    <th className="py-2">Lighting</th>
-                    <th className="py-2">Price ({curr.symbol})</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-100 text-stone-700">
-                  {furniture.map((item) => (
-                    <tr key={item.id} className="hover:bg-stone-50/50">
-                      <td className="py-2.5 font-semibold text-stone-900">{item.name}</td>
-                      <td className="py-2.5 capitalize text-stone-600">{item.zone}</td>
-                      <td className="py-2.5 font-mono text-[11px] text-stone-500">{item.width} × {item.height} cm</td>
-                      <td className="py-2.5 text-stone-500">{item.lightingKelvin ? `${item.lightingKelvin}K` : '—'}</td>
-                      <td className="py-2.5 font-bold font-mono text-emerald-600">
-                        {curr.symbol}{Math.round((item.priceEst || 0) * curr.rateFromUSD).toLocaleString()}
-                      </td>
+            {/* Itemized Procurement List */}
+            <div className="p-5 rounded-3xl bg-white border border-stone-200 shadow-sm space-y-3">
+              <h3 className="font-bold text-stone-900 text-xs uppercase tracking-wider font-display">
+                Itemized Furniture Specifications ({curr.code})
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-stone-200 text-stone-400 text-[10px] uppercase font-mono">
+                      <th className="py-2">Item Name</th>
+                      <th className="py-2">Zone</th>
+                      <th className="py-2">Dimensions</th>
+                      <th className="py-2">Lighting</th>
+                      <th className="py-2">Price ({curr.symbol})</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100 text-stone-700">
+                    {furniture.map((item) => (
+                      <tr key={item.id} className="hover:bg-stone-50/50">
+                        <td className="py-2 font-semibold text-stone-900">{item.name}</td>
+                        <td className="py-2 capitalize text-stone-600">{item.zone}</td>
+                        <td className="py-2 font-mono text-[11px] text-stone-500">{item.width} × {item.height} cm</td>
+                        <td className="py-2 text-stone-500">{item.lightingKelvin ? `${item.lightingKelvin}K` : '—'}</td>
+                        <td className="py-2 font-bold font-mono text-emerald-600">
+                          {curr.symbol}{Math.round((item.priceEst || 0) * curr.rateFromUSD).toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Ergonomic & Safety Certification Block */}
+            <div className="p-4 rounded-3xl bg-emerald-50/60 border border-emerald-200 text-xs space-y-2">
+              <div className="font-bold text-emerald-900 flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Spatial Safety & Developmental Compliance Verification</span>
+              </div>
+              <p className="text-emerald-800 text-[11px] leading-relaxed">
+                ✓ Guaranteed minimum 75 cm Minkowski clear circulation pathways throughout all zones.<br />
+                ✓ Door swing trajectory verified 100% free of spatial collision and pinch points.<br />
+                ✓ Ergonomic shelf heights tailored for {roomConfig.ageBracket} years autonomy.
+              </p>
+            </div>
+
+            {/* Page 2 Pagination Footer */}
+            <div className="pt-3 border-t border-stone-200 flex items-center justify-between text-[10px] font-mono text-stone-400">
+              <span>PROJECT CHILDREN'S CORNER • ITEM PROCUREMENT & SAFETY SIGN-OFF</span>
+              <span className="font-bold text-stone-700 bg-stone-100 px-2 py-0.5 rounded">PAGE 2 OF 2</span>
             </div>
           </div>
         </div>

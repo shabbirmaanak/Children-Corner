@@ -38,7 +38,6 @@ export const FamilyProfileModal: React.FC<FamilyProfileModalProps> = ({
   };
 
   return (
-  return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-md animate-in fade-in">
       <div className="bg-white border border-stone-200 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
         <div className="flex items-center justify-between border-b border-stone-200 pb-4">

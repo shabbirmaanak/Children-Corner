@@ -7,7 +7,7 @@ import {
   Wrench, 
   ArrowRight,
   CheckCircle2,
-  Sparkles,
+  Home,
   Layers,
   HelpCircle
 } from 'lucide-react';
@@ -69,7 +69,7 @@ export const AuditPanel: React.FC<AuditPanelProps> = ({
       {violations.length > 0 && (
         <div className="p-3.5 rounded-xl bg-gradient-to-r from-indigo-950/60 to-purple-950/40 border border-indigo-500/30 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs text-indigo-200">
-            <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
+            <Home className="w-4 h-4 text-indigo-400 shrink-0" />
             <span>{violations.length} safety or spatial item{violations.length > 1 ? 's' : ''} detected.</span>
           </div>
           <button

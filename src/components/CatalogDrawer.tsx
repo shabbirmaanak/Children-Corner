@@ -5,7 +5,7 @@ import {
   ShieldCheck, 
   Search, 
   Filter, 
-  Sparkles,
+  Home,
   Bed,
   Layers,
   BookOpen,
@@ -77,7 +77,7 @@ export const CatalogDrawer: React.FC<CatalogDrawerProps> = ({
 
   const zoneBadges: { id: ZoneType | 'all'; label: string; icon: any; color: string }[] = [
     { id: 'all', label: 'All Catalog', icon: Layers, color: 'text-slate-300' },
-    { id: 'active', label: 'Active Play', icon: Sparkles, color: 'text-amber-400' },
+    { id: 'active', label: 'Active Play', icon: Home, color: 'text-amber-400' },
     { id: 'calm', label: 'Calm Nook', icon: BookOpen, color: 'text-indigo-400' },
     { id: 'focus', label: 'Focus / Desk', icon: SunMedium, color: 'text-emerald-400' },
     { id: 'storage', label: 'Sleep & Storage', icon: Archive, color: 'text-orange-400' },

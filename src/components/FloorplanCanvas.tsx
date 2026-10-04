@@ -10,7 +10,7 @@ import {
   Eye, 
   Grid, 
   ShieldAlert, 
-  Sparkles,
+  Home,
   Sun,
   DoorClosed,
   Ruler

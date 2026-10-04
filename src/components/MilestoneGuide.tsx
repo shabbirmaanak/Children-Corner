@@ -3,7 +3,7 @@ import {
   BookOpen, 
   Sun, 
   Moon, 
-  Sparkles, 
+  Home, 
   CheckCircle2, 
   Palette, 
   Ruler, 
@@ -65,7 +65,7 @@ export const MilestoneGuide: React.FC<MilestoneGuideProps> = ({
         {/* Stage Overview */}
         <div className="p-5 rounded-2xl bg-slate-850 border border-slate-800 space-y-3 md:col-span-2">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400" />
+            <Home className="w-4 h-4 text-amber-400" />
             <h3 className="text-sm font-bold text-white uppercase tracking-wider">
               {milestone.stageTitle}
             </h3>

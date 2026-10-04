@@ -15,7 +15,7 @@ import {
   generateSmartAutoLayout
 } from './engine/spatialEngine.ts';
 import { 
-  Sparkles, 
+  Home, 
   Ruler, 
   Wand2, 
   Layers, 
@@ -26,15 +26,15 @@ import {
   Compass, 
   Wrench, 
   Check, 
-  RefreshCw,
-  Coins,
-  User,
-  HelpCircle,
-  X,
-  BookOpen,
-  Hash,
-  UserCheck,
-  Sun
+  RefreshCw, 
+  Coins, 
+  User, 
+  HelpCircle, 
+  X, 
+  BookOpen, 
+  Hash, 
+  UserCheck, 
+  Sun 
 } from 'lucide-react';
 import { FloorplanCanvas } from './components/FloorplanCanvas.tsx';
 import { CustomItemModal } from './components/CustomItemModal.tsx';
@@ -303,7 +303,7 @@ export const App: React.FC = () => {
         {/* Brand & Child's Name Inline Editor */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-mint-500 via-azure-500 to-coral-500 flex items-center justify-center text-white shadow-md shadow-coral-500/25 ring-1 ring-white/60">
-            <Sparkles className="w-4 h-4" />
+            <Home className="w-4 h-4" />
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -423,7 +423,7 @@ export const App: React.FC = () => {
             title="Auto-generate layout from architectural rules"
             className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-to-r from-coral-500 to-sunshine-500 hover:from-coral-400 hover:to-sunshine-400 text-white font-black text-xs shadow-md shadow-coral-500/25 active:scale-95 transition-all"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <Home className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Auto-Layout</span>
           </button>
 
@@ -862,7 +862,7 @@ export const App: React.FC = () => {
                   <RefreshCw className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" />
+                    <Home className="w-4 h-4" />
                     <span>Apply & Generate Layout</span>
                   </>
                 )}
@@ -906,7 +906,7 @@ export const App: React.FC = () => {
                   disabled={isAiGenerating || !aiPrompt.trim()}
                   className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-coral-500 to-sunshine-500 hover:from-coral-600 hover:to-sunshine-600 text-white font-bold text-xs shadow-md shadow-coral-500/20 disabled:opacity-50 transition-all flex items-center justify-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Home className="w-3.5 h-3.5" />
                   <span>{isAiGenerating ? 'Generating Layout...' : 'Prompt to Layout'}</span>
                 </button>
               </form>

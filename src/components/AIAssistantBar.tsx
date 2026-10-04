@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Send, Wand2, Lightbulb, Check } from 'lucide-react';
+import { Home, Send, Wand2, Lightbulb, Check } from 'lucide-react';
 import { RoomConfig, AgeBracket, WallSide } from '../types/index.ts';
 
 interface AIAssistantBarProps {
@@ -169,7 +169,7 @@ export const AIAssistantBar: React.FC<AIAssistantBarProps> = ({
             <span>Generating...</span>
           ) : (
             <>
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <Home className="w-3.5 h-3.5 text-amber-300" />
               <span>Prompt to Layout</span>
             </>
           )}

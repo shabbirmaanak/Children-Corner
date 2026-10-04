@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Sparkles, 
+  Home, 
   Settings, 
   Download, 
   Plus, 
@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-400 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-2 ring-white/15">
-              <Sparkles className="w-5 h-5 text-white" />
+              <Home className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">

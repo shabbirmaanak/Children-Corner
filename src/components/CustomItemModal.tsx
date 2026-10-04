@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Sparkles, Ruler } from 'lucide-react';
+import { X, Plus, Home, Ruler } from 'lucide-react';
 import { Box, ZoneType, RoomConfig, CurrencyCode, CURRENCIES } from '../types/index.ts';
 
 interface CustomItemModalProps {

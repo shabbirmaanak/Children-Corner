@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Ruler, 
-  Sparkles, 
+  Home, 
   Sun, 
   DoorClosed, 
   Sliders, 
@@ -311,7 +311,7 @@ export const InteractiveMeasurementBar: React.FC<InteractiveMeasurementBarProps>
             {/* 4. Child Age & Layout Focus Goal */}
             <div className="p-4 rounded-2xl bg-slate-850 border border-slate-700/70 hover:border-slate-600 transition-all space-y-2.5">
               <div className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <Home className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Child Profile & Goal</span>
               </div>
 
@@ -384,7 +384,7 @@ export const InteractiveMeasurementBar: React.FC<InteractiveMeasurementBarProps>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-slate-950 group-hover:scale-110 transition-transform" />
+                  <Home className="w-4 h-4 text-slate-950 group-hover:scale-110 transition-transform" />
                   <span>Apply Measurements & Generate Layout</span>
                   <ChevronRight className="w-4 h-4 text-slate-950 group-hover:translate-x-1 transition-transform" />
                 </>

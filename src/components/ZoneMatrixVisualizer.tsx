@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Sparkles, 
+  Home, 
   BookOpen, 
   SunMedium, 
   Archive, 
@@ -67,7 +67,7 @@ export const ZoneMatrixVisualizer: React.FC<ZoneMatrixVisualizerProps> = ({
   };
 
   const icons: Record<ZoneType, any> = {
-    active: Sparkles,
+    active: Home,
     calm: BookOpen,
     focus: SunMedium,
     storage: Archive
@@ -125,7 +125,7 @@ export const ZoneMatrixVisualizer: React.FC<ZoneMatrixVisualizerProps> = ({
           onClick={onAutoGenerate}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 hover:from-amber-400 hover:to-orange-400 transition-all shrink-0 active:scale-95"
         >
-          <Sparkles className="w-4 h-4" />
+          <Home className="w-4 h-4" />
           <span>Apply Age Weighting to Room</span>
         </button>
       </div>

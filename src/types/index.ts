@@ -8,7 +8,7 @@ export type UnitType = 'cm' | 'm' | 'ft';
 
 export type DoorType = 'inward' | 'outward' | 'sliding' | 'open_arch' | 'none';
 
-export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'INR' | 'CAD' | 'AUD' | 'AED' | 'JPY';
+export type CurrencyCode = 'INR' | 'USD';
 
 export interface CurrencyConfig {
   code: CurrencyCode;
@@ -18,14 +18,8 @@ export interface CurrencyConfig {
 }
 
 export const CURRENCIES: Record<CurrencyCode, CurrencyConfig> = {
-  USD: { code: 'USD', symbol: '$', rateFromUSD: 1.0, label: 'USD ($)' },
-  EUR: { code: 'EUR', symbol: '€', rateFromUSD: 0.92, label: 'EUR (€)' },
-  GBP: { code: 'GBP', symbol: '£', rateFromUSD: 0.79, label: 'GBP (£)' },
   INR: { code: 'INR', symbol: '₹', rateFromUSD: 83.5, label: 'INR (₹)' },
-  CAD: { code: 'CAD', symbol: 'CA$', rateFromUSD: 1.36, label: 'CAD ($)' },
-  AUD: { code: 'AUD', symbol: 'AU$', rateFromUSD: 1.52, label: 'AUD ($)' },
-  AED: { code: 'AED', symbol: 'AED ', rateFromUSD: 3.67, label: 'AED' },
-  JPY: { code: 'JPY', symbol: '¥', rateFromUSD: 152.0, label: 'JPY (¥)' }
+  USD: { code: 'USD', symbol: '$', rateFromUSD: 1.0, label: 'USD ($)' }
 };
 
 export interface Point {
